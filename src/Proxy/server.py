@@ -38,14 +38,11 @@ class StratumServer:
 
         try:
             self.server.bind(("0.0.0.0", self.port))
+            self.server.listen()
         except Exception:
             self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.server.bind(("0.0.0.0", self.port))
-
-        self.server.listen()
-        self.server_conn, addr = self.server.accept()
-
-        logging.info('Connected by' + str(addr))
+            self.server.listen(1)
 
     def run(self):
         thread_pool_receiver = threading.Thread(target=self.receive_from_pool)
@@ -175,6 +172,8 @@ class StratumServer:
 
     def receive_from_miner(self):
         while True:
+            self.server_conn, addr = self.server.accept()
+
             data = self.server_conn.recv(8000)
 
             dec_data = data.decode("utf-8")
