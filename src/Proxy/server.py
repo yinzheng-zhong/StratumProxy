@@ -96,6 +96,7 @@ class StratumServer:
         self.last_coin = coin
 
         self.pool_sending_queue.put(json_data)
+        logging.warning('\n' + '=' * 256)
         logging.warning('Miner Switching to $' + coin)
 
     def choose_coin(self):
@@ -161,6 +162,8 @@ class StratumServer:
             try:
                 self.client.send(enc_data)
             except OSError as e:
+                self.client.connect()
+                self.client.send(enc_data)
                 logging.error(e)
 
             if self.kill_signal:
@@ -220,7 +223,7 @@ class StratumServer:
         :param pool_data:
         :return:
         """
-        try:
-            self.server_conn.sendall(pool_data.encode('utf-8'))
-        except OSError as e:
-            logging.error(e)
+        #try:
+        self.server_conn.sendall(pool_data.encode('utf-8'))
+        #except OSError as e:
+            #logging.error(e)
