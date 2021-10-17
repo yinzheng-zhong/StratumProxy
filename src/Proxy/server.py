@@ -36,13 +36,9 @@ class StratumServer:
     def _start_server(self):
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        try:
-            self.server.bind(("0.0.0.0", self.port))
-            self.server.listen()
-        except Exception:
-            self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            self.server.bind(("0.0.0.0", self.port))
-            self.server.listen(1)
+        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.server.bind(("0.0.0.0", self.port))
+        self.server.listen(1)
 
         self.server_conn, addr = self.server.accept()
 
