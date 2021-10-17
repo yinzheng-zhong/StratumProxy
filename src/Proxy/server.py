@@ -77,8 +77,6 @@ class StratumServer:
 
     def init_coin(self, data_dic):
         self.last_switching = time.time()
-        if not self.auth:
-            return
 
         coin = self.api.get_most_profitable()
 
@@ -88,9 +86,7 @@ class StratumServer:
             if 'proxy' in req_params[i]:
                 req_params[i] = self.setting.get_param() + ',mc=' + coin
 
-        self.auth['id'] = self.last_id + 1
-
-        json_data = json.dumps(self.auth) + '\n'
+        json_data = json.dumps(data_dic) + '\n'
 
         self.last_coin = coin
 
@@ -101,21 +97,6 @@ class StratumServer:
     def choose_coin(self):
         self.last_switching = time.time()
 
-        '''
-        if not self.auth:
-            return
-        
-        if coin == self.last_coin:
-            logging.info('Continue Mining $' + coin)
-            return
-
-        req_params = self.auth['params']
-        for i in range(len(req_params)):
-            if self.last_coin and self.last_coin in req_params[i]:
-                req_params[i] = req_params[i].replace(self.last_coin, coin)
-
-        self.auth['id'] = self.last_id + 2
-        '''
         coin = self.api.get_most_profitable()
 
         if self.last_coin and coin != self.last_coin:
