@@ -44,6 +44,8 @@ class StratumServer:
             self.server.bind(("0.0.0.0", self.port))
             self.server.listen(1)
 
+        self.server_conn, addr = self.server.accept()
+
     def run(self):
         thread_pool_receiver = threading.Thread(target=self.receive_from_pool)
         thread_pool_processor = threading.Thread(target=self.process_from_pool)
@@ -172,8 +174,6 @@ class StratumServer:
 
     def receive_from_miner(self):
         while True:
-            self.server_conn, addr = self.server.accept()
-
             data = self.server_conn.recv(8000)
 
             dec_data = data.decode("utf-8")
