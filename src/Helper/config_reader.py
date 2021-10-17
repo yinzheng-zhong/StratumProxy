@@ -33,7 +33,7 @@ class ConfigReader:
         self.data = self._read_file()
 
     def get_logging_level(self):
-        level = self.data['param']
+        level = self.data['debug_level']
 
         if level == 'critical' or level == 'fatal':
             return logging.CRITICAL
