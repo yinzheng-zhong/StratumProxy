@@ -28,12 +28,13 @@ class StratumServer:
 
         self.server = None
         self.server_conn = None
-        self.kill_signal = False
+        self.exit_signal = False
 
         logging.basicConfig(level=self.setting.get_logging_level())
         self._start_server()
 
     def _start_server(self):
+        self.exit_signal = False
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -103,9 +104,9 @@ class StratumServer:
         if self.last_coin and coin != self.last_coin:
             logging.warning('\n' + '=' * 256)
             logging.warning('Miner Switching to $' + coin)
-            self.kill_signal = True
+            self.exit_signal = True
 
-            self.close()
+            self.restart()
 
             #self.pool_sending_queue.put('{"id": ' + str(self.last_id+1) + ', "method": "mining.subscribe", "params": ["cgminer/4.9.0", "08dce1352bf4a4c420efca8c7d46f753"]}\n')
             #self.pool_sending_queue.put(json.dumps(self.auth) + '\n')
@@ -114,11 +115,11 @@ class StratumServer:
 
         #print('Miner Switching to $' + coin)
 
-    def close(self):
+    def restart(self):
         self.server_conn.close()
-        self.server.close()
 
         self.client.restart()
+        self._start_server()
 
     def periodic_calls(self):
         while True:
@@ -128,7 +129,7 @@ class StratumServer:
 
             time.sleep(30)
 
-            if self.kill_signal:
+            if self.exit_signal:
                 return
 
     def send_to_pool(self):
@@ -149,14 +150,14 @@ class StratumServer:
                 self.client.send(enc_data)
                 logging.error(e)
 
-            if self.kill_signal:
+            if self.exit_signal:
                 return
 
     def receive_from_pool(self):
         while True:
             self.client.receive()
 
-            if self.kill_signal:
+            if self.exit_signal:
                 return
 
     def process_from_pool(self):
@@ -167,7 +168,7 @@ class StratumServer:
             # redirect the data strait to the miner
             self.send_to_miner(pool_data)
 
-            if self.kill_signal:
+            if self.exit_signal:
                 return
 
     def receive_from_miner(self):
@@ -181,7 +182,7 @@ class StratumServer:
                 if rec:
                     self.miner_receive_queue.put(rec + '\n')
 
-            if self.kill_signal:
+            if self.exit_signal:
                 return
 
     def process_from_miner(self):
@@ -196,7 +197,7 @@ class StratumServer:
             else:  # decode and put into queue
                 self.pool_sending_queue.put(miner_data)
 
-            if self.kill_signal:
+            if self.exit_signal:
                 return
 
     def send_to_miner(self, pool_data):
