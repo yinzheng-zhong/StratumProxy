@@ -1,0 +1,17 @@
+{
+  "setting": {
+        "scrypt": {
+          "coins": ["DGB", "NAH", "FLO", "XSH", "LTC", "PYRK", "GLC", "EMC2", "EFL", "GCN", "NSD", "GSR", "CHEESE", "XVG", "LCP"],
+                   "pool_port": 3433,
+                   "server_port": 3334
+        },
+        "ethash": {
+          "coins": ["ETH", "NUKO", "TSF", "CLO", "EXP", "ATH", "EGEM", "PRKL", "NILU"],
+                   "pool_port": 9999,
+                   "server_port": 3335
+        }
+    },
+
+  "debug_level": "debug",
+  "param": "c=BTC,m=solo"
+}    
