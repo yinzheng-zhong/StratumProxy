@@ -16,7 +16,6 @@ class StratumServer:
         self.port = self.setting.get_server_port()
         self.last_switching = np.inf
         self.last_coin = ''
-        self.auth = ''
 
         self.last_id = 0
 
@@ -76,14 +75,14 @@ class StratumServer:
         thread_pool_sender.join()
         thread_periodic_calls.join()
 
-    def init_coin(self):
+    def init_coin(self, data_dic):
         self.last_switching = time.time()
         if not self.auth:
             return
 
         coin = self.api.get_most_profitable()
 
-        req_params = self.auth['params']
+        req_params = data_dic['params']
         for i in range(len(req_params)):
             # initial phase, get proxy from miner
             if 'proxy' in req_params[i]:
@@ -209,8 +208,7 @@ class StratumServer:
             data_dic = json.loads(miner_data)
 
             if data_dic['method'] == 'mining.authorize' or data_dic['method'] == 'eth_submitLogin':
-                self.auth = data_dic
-                self.init_coin()
+                self.init_coin(data_dic)
             else:  # decode and put into queue
                 self.pool_sending_queue.put(miner_data)
 
