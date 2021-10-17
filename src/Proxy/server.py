@@ -12,6 +12,7 @@ import threading
 
 class StratumServer:
     def __init__(self, algo):
+        self.algo = algo
         self.setting = ConfigReader(algo)
         self.port = self.setting.get_server_port()
         self.last_switching = np.inf
@@ -142,7 +143,7 @@ class StratumServer:
             try:
                 self.client.send(enc_data)
             except OSError as e:
-                self.client.connect()
+                self.client = Client(self.algo)
                 self.client.send(enc_data)
                 logging.error(e)
 
