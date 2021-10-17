@@ -105,6 +105,8 @@ class StratumServer:
         coin = self.api.get_most_profitable()
 
         if self.last_coin and coin != self.last_coin:
+            logging.warning('\n' + '=' * 256)
+            logging.warning('Miner Switching to $' + coin)
             self.kill_signal = True
 
             self.close()
@@ -207,7 +209,8 @@ class StratumServer:
         :param pool_data:
         :return:
         """
-        #try:
-        self.server_conn.sendall(pool_data.encode('utf-8'))
-        #except OSError as e:
-            #logging.error(e)
+        try:
+            self.server_conn.sendall(pool_data.encode('utf-8'))
+        except OSError as e:
+            logging.error(e)
+            self.server_conn, addr = self.server.accept()
