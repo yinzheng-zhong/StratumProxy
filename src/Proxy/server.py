@@ -132,8 +132,7 @@ class StratumServer:
 
             try:
                 sending_data = self.pool_sending_queue.get(block=False)
-            except Exception as e:
-                print(e)
+            except queue.Empty as e:
                 continue
 
             obj = json.loads(sending_data)
