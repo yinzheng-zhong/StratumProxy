@@ -111,6 +111,7 @@ class StratumServer:
             logging.info('Keep mining $' + coin)
 
     def restart(self):
+        self.exit_signal = True
         raise Exception('Server restart')
 
     def periodic_calls(self):
@@ -131,24 +132,24 @@ class StratumServer:
 
             try:
                 sending_data = self.pool_sending_queue.get(block=False)
-
-                obj = json.loads(sending_data)
-                self.last_id = obj['id']
-
-                enc_data = sending_data.encode('utf-8')
-
-                logging.info('Miner: ' + repr(enc_data))
-
-                try:
-                    self.client.send(enc_data)
-                except OSError as e:
-                    logging.error(str(e) + 'OSError in server.py send_to_pool()')
-                    self.client = Client(self.algo)
-                    self.client.send(enc_data)
-                    logging.error(e)
             except Exception as e:
                 print(e)
                 continue
+
+            obj = json.loads(sending_data)
+            self.last_id = obj['id']
+
+            enc_data = sending_data.encode('utf-8')
+
+            logging.info('Miner: ' + repr(enc_data))
+
+            try:
+                self.client.send(enc_data)
+            except OSError as e:
+                logging.error(str(e) + 'OSError in server.py send_to_pool()')
+                self.client = Client(self.algo)
+                self.client.send(enc_data)
+                logging.error(e)
 
     def receive_from_pool(self):
         while True:
@@ -168,13 +169,14 @@ class StratumServer:
 
             try:
                 pool_data = self.client.pool_receive_queue.get(block=False)
-                logging.info('Pool: ' + repr(pool_data))
-
-                # redirect the data strait to the miner
-                self.send_to_miner(pool_data)
             except Exception as e:
                 print(e)
                 continue
+
+            logging.info('Pool: ' + repr(pool_data))
+
+            # redirect the data strait to the miner
+            self.send_to_miner(pool_data)
 
     def receive_from_miner(self):
         while True:
@@ -183,17 +185,16 @@ class StratumServer:
 
             try:
                 data = self.server_conn.recv(8000)
-
-                dec_data = data.decode("utf-8")
-                received = dec_data.split('\n')
-
-                for rec in received:
-                    if rec:
-                        self.miner_receive_queue.put(rec + '\n')
-
             except Exception as e:
                 print(e)
                 continue
+
+            dec_data = data.decode("utf-8")
+            received = dec_data.split('\n')
+
+            for rec in received:
+                if rec:
+                    self.miner_receive_queue.put(rec + '\n')
 
     def process_from_miner(self):
         while True:
@@ -202,18 +203,17 @@ class StratumServer:
 
             try:
                 miner_data = self.miner_receive_queue.get(block=False)
-
-                # Here is for worker reg, choose the coin now.
-                data_dic = json.loads(miner_data)
-
-                if data_dic['method'] == 'mining.authorize' or data_dic['method'] == 'eth_submitLogin':
-                    self.init_coin(data_dic)
-                else:  # decode and put into queue
-                    self.pool_sending_queue.put(miner_data)
-
             except Exception as e:
                 print(e)
                 continue
+
+            # Here is for worker reg, choose the coin now.
+            data_dic = json.loads(miner_data)
+
+            if data_dic['method'] == 'mining.authorize' or data_dic['method'] == 'eth_submitLogin':
+                self.init_coin(data_dic)
+            else:  # decode and put into queue
+                self.pool_sending_queue.put(miner_data)
 
     def send_to_miner(self, pool_data):
         """
@@ -221,5 +221,9 @@ class StratumServer:
         :param pool_data:
         :return:
         """
-        self.server_conn.sendall(pool_data.encode('utf-8'))
+
+        try:
+            self.server_conn.sendall(pool_data.encode('utf-8'))
+        except OSError:
+            self.restart()
 
