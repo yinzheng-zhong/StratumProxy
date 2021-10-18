@@ -36,7 +36,7 @@ class StratumServer:
     def _start_server(self):
         self.exit_signal = False
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+        self.server.setblocking(False)
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.bind(("0.0.0.0", self.port))
         self.server.listen(5)
@@ -126,72 +126,94 @@ class StratumServer:
 
     def send_to_pool(self):
         while True:
-            sending_data = self.pool_sending_queue.get()#block=False)
-
-            obj = json.loads(sending_data)
-            self.last_id = obj['id']
-
-            enc_data = sending_data.encode('utf-8')
-
-            logging.info('Miner: ' + repr(enc_data))
-
-            try:
-                self.client.send(enc_data)
-            except OSError as e:
-                logging.error(str(e) + 'OSError in server.py send_to_pool()')
-                self.client = Client(self.algo)
-                self.client.send(enc_data)
-                logging.error(e)
-
             if self.exit_signal:
                 return
+
+            try:
+                sending_data = self.pool_sending_queue.get(block=False)
+
+                obj = json.loads(sending_data)
+                self.last_id = obj['id']
+
+                enc_data = sending_data.encode('utf-8')
+
+                logging.info('Miner: ' + repr(enc_data))
+
+                try:
+                    self.client.send(enc_data)
+                except OSError as e:
+                    logging.error(str(e) + 'OSError in server.py send_to_pool()')
+                    self.client = Client(self.algo)
+                    self.client.send(enc_data)
+                    logging.error(e)
+            except Exception as e:
+                print(e)
+                continue
 
     def receive_from_pool(self):
         while True:
-            self.client.receive()
-
             if self.exit_signal:
                 return
+
+            try:
+                self.client.receive()
+            except Exception as e:
+                print(e)
+                continue
 
     def process_from_pool(self):
         while True:
-            pool_data = self.client.pool_receive_queue.get()#block=False)
-            logging.info('Pool: ' + repr(pool_data))
-
-            # redirect the data strait to the miner
-            self.send_to_miner(pool_data)
-
             if self.exit_signal:
                 return
+
+            try:
+                pool_data = self.client.pool_receive_queue.get(block=False)
+                logging.info('Pool: ' + repr(pool_data))
+
+                # redirect the data strait to the miner
+                self.send_to_miner(pool_data)
+            except Exception as e:
+                print(e)
+                continue
 
     def receive_from_miner(self):
         while True:
-            data = self.server_conn.recv(8000)
-
-            dec_data = data.decode("utf-8")
-            received = dec_data.split('\n')
-
-            for rec in received:
-                if rec:
-                    self.miner_receive_queue.put(rec + '\n')
-
             if self.exit_signal:
                 return
+
+            try:
+                data = self.server_conn.recv(8000)
+
+                dec_data = data.decode("utf-8")
+                received = dec_data.split('\n')
+
+                for rec in received:
+                    if rec:
+                        self.miner_receive_queue.put(rec + '\n')
+
+            except Exception as e:
+                print(e)
+                continue
 
     def process_from_miner(self):
         while True:
-            miner_data = self.miner_receive_queue.get()  # block=False)
-
-            # Here is for worker reg, choose the coin now.
-            data_dic = json.loads(miner_data)
-
-            if data_dic['method'] == 'mining.authorize' or data_dic['method'] == 'eth_submitLogin':
-                self.init_coin(data_dic)
-            else:  # decode and put into queue
-                self.pool_sending_queue.put(miner_data)
-
             if self.exit_signal:
                 return
+
+            try:
+                miner_data = self.miner_receive_queue.get(block=False)
+
+                # Here is for worker reg, choose the coin now.
+                data_dic = json.loads(miner_data)
+
+                if data_dic['method'] == 'mining.authorize' or data_dic['method'] == 'eth_submitLogin':
+                    self.init_coin(data_dic)
+                else:  # decode and put into queue
+                    self.pool_sending_queue.put(miner_data)
+
+            except Exception as e:
+                print(e)
+                continue
 
     def send_to_miner(self, pool_data):
         """

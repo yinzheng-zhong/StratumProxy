@@ -19,7 +19,7 @@ class Client:
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((host, port))
-        #s.setblocking(0)
+        s.setblocking(False)
 
         return s
 
