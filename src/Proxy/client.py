@@ -31,13 +31,13 @@ class Client:
         self.server.sendall(msg)
 
     def receive(self):
-        try:
-            data = self.server.recv(8000)
-        except ConnectionResetError:
-            time.sleep(10)
-            self._connect()
-            logging.error('ConnectionResetError in client.py -> receive')
-            raise Exception('Restart')
+        #try:
+        data = self.server.recv(8000)
+        #except ConnectionResetError:
+        #    time.sleep(10)
+        #    self._connect()
+        #    logging.error('ConnectionResetError in client.py -> receive')
+        #    raise Exception('Restart')
 
         dec_data = data.decode("utf-8")
         received = dec_data.split('\n')
