@@ -9,6 +9,11 @@
           "coins": ["ETH", "NUKO", "TSF", "CLO", "EXP", "ATH", "EGEM", "PRKL", "NILU"],
                    "pool_port": 9999,
                    "server_port": 3335
+        },
+        "sha256": {
+          "coins": ["BCA", "FCH", "DGB", "LCC", "XEC", "SHND", "DVT", "PYRK", "BVG", "CHTA"],
+                   "pool_port": 3333,
+                   "server_port": 3333
         }
     },
 

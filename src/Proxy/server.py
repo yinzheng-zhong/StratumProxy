@@ -107,25 +107,19 @@ class StratumServer:
             self.exit_signal = True
 
             self.restart()
-
-            #self.pool_sending_queue.put('{"id": ' + str(self.last_id+1) + ', "method": "mining.subscribe", "params": ["cgminer/4.9.0", "08dce1352bf4a4c420efca8c7d46f753"]}\n')
-            #self.pool_sending_queue.put(json.dumps(self.auth) + '\n')
-
-        #self.last_coin = coin
-
-        #print('Miner Switching to $' + coin)
+        else:
+            logging.info('Keep mining $' + coin)
 
     def restart(self):
         raise Exception('Server restart')
-        #self._start_server()
 
     def periodic_calls(self):
         while True:
-            if time.time() - self.last_switching > 30:
+            if time.time() - self.last_switching > 120:
                 self.choose_coin()
                 self.setting.refresh()
 
-            time.sleep(30)
+            time.sleep(120)
 
             if self.exit_signal:
                 return
