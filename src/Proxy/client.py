@@ -37,7 +37,7 @@ class Client:
             time.sleep(10)
             self._connect()
             logging.error('ConnectionResetError in client.py -> receive')
-            return
+            raise Exception('Restart')
 
         dec_data = data.decode("utf-8")
         received = dec_data.split('\n')
