@@ -6,6 +6,9 @@ if __name__ == '__main__':
     arg = sys.argv[1]
     print('Mining using ' + arg)
 
-    server = StratumServer(arg)
-    server.run()
-
+    try:
+        server = StratumServer(arg)
+        server.run()
+    except Exception as e:
+        print('Error', e)
+        sys.exit()
