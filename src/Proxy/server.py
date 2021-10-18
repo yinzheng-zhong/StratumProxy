@@ -36,12 +36,12 @@ class StratumServer:
     def _start_server(self):
         self.exit_signal = False
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server.setblocking(False)
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.bind(("0.0.0.0", self.port))
         self.server.listen(5)
 
         self.server_conn, addr = self.server.accept()
+        self.server.setblocking(False)
 
     def run(self):
         thread_pool_receiver = threading.Thread(target=self.receive_from_pool)
