@@ -1,4 +1,6 @@
 import socket
+import time
+
 from src.Helper.config_reader import ConfigReader
 import queue
 
@@ -28,7 +30,12 @@ class Client:
         self.server.sendall(msg)
 
     def receive(self):
-        data = self.server.recv(8000)
+        try:
+            data = self.server.recv(8000)
+        except ConnectionResetError:
+            time.sleep(10)
+            self._connect()
+            return
 
         dec_data = data.decode("utf-8")
         received = dec_data.split('\n')

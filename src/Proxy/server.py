@@ -39,7 +39,7 @@ class StratumServer:
 
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         self.server.bind(("0.0.0.0", self.port))
-        self.server.listen(1)
+        self.server.listen(5)
 
         self.server_conn, addr = self.server.accept()
 
