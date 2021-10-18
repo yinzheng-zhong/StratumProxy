@@ -199,8 +199,5 @@ class StratumServer:
         :param pool_data:
         :return:
         """
-        try:
-            self.server_conn.sendall(pool_data.encode('utf-8'))
-        except OSError as e:
-            logging.error(str(e) + 'OSError in server.py send_to_miner()')
-            self.server_conn, addr = self.server.accept()
+        self.server_conn.sendall(pool_data.encode('utf-8'))
+
