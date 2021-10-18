@@ -116,10 +116,12 @@ class StratumServer:
         #print('Miner Switching to $' + coin)
 
     def restart(self):
-        self.server_conn.close()
+        #self.server_conn.close()
 
         self.client.restart()
-        self._start_server()
+
+        raise Exception('Server restart')
+        #self._start_server()
 
     def periodic_calls(self):
         while True:
