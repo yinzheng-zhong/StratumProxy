@@ -144,6 +144,7 @@ class StratumServer:
             try:
                 self.client.send(enc_data)
             except OSError as e:
+                logging.error(str(e) + 'OSError in server.py send_to_pool()')
                 self.client = Client(self.algo)
                 self.client.send(enc_data)
                 logging.error(e)
@@ -207,5 +208,5 @@ class StratumServer:
         try:
             self.server_conn.sendall(pool_data.encode('utf-8'))
         except OSError as e:
-            logging.error(e)
+            logging.error(str(e) + 'OSError in server.py send_to_miner()')
             self.server_conn, addr = self.server.accept()

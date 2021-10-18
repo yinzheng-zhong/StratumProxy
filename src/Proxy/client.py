@@ -1,5 +1,6 @@
 import socket
 import time
+import logging
 
 from src.Helper.config_reader import ConfigReader
 import queue
@@ -35,6 +36,7 @@ class Client:
         except ConnectionResetError:
             time.sleep(10)
             self._connect()
+            logging.error('ConnectionResetError in client.py -> receive')
             return
 
         dec_data = data.decode("utf-8")
