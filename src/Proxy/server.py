@@ -158,8 +158,7 @@ class StratumServer:
 
             try:
                 self.client.receive()
-            except socket.error as e:
-                print(e)
+            except socket.error:
                 continue
 
     def process_from_pool(self):
@@ -185,8 +184,7 @@ class StratumServer:
 
             try:
                 data = self.server_conn.recv(8000)
-            except socket.error as e:
-                print(e)
+            except socket.error:
                 continue
 
             dec_data = data.decode("utf-8")
