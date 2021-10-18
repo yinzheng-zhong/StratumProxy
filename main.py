@@ -9,4 +9,3 @@ if __name__ == '__main__':
     server = StratumServer(arg)
     server.run()
 
-    time.sleep(10)
