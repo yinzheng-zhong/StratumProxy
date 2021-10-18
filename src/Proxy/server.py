@@ -158,7 +158,7 @@ class StratumServer:
 
             try:
                 self.client.receive()
-            except Exception as e:
+            except socket.error as e:
                 print(e)
                 continue
 
@@ -185,7 +185,7 @@ class StratumServer:
 
             try:
                 data = self.server_conn.recv(8000)
-            except Exception as e:
+            except socket.error as e:
                 print(e)
                 continue
 
