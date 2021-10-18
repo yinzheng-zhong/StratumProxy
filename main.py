@@ -1,5 +1,5 @@
 import sys
-from Proxy.server import StratumServer
+from .src.Proxy.server import StratumServer
 import time
 
 if __name__ == '__main__':
