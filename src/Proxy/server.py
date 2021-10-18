@@ -168,8 +168,7 @@ class StratumServer:
 
             try:
                 pool_data = self.client.pool_receive_queue.get(block=False)
-            except Exception as e:
-                print(e)
+            except queue.Empty:
                 continue
 
             logging.info('Pool: ' + repr(pool_data))
@@ -201,8 +200,7 @@ class StratumServer:
 
             try:
                 miner_data = self.miner_receive_queue.get(block=False)
-            except Exception as e:
-                print(e)
+            except queue.Empty:
                 continue
 
             # Here is for worker reg, choose the coin now.
