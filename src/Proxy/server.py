@@ -167,7 +167,11 @@ class StratumServer:
             except queue.Empty:
                 continue
 
-            Logger.info2('Pool: ' + repr(pool_data))
+            json_obj = json.loads(pool_data)
+            if json_obj['result'] == 'false':
+                Logger.warning('Pool: ' + pool_data)
+            else:
+                Logger.info2('Pool: ' + repr(pool_data))
 
             # redirect the data strait to the miner
             self.send_to_miner(pool_data)
