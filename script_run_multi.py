@@ -17,7 +17,7 @@ class ProcManager:
             self.proc_list.append(subprocess.Popen('python3 ' + self.filename, shell=True))
 
     def remove_dead_procs(self):
-        self.proc_list = [proc for proc in self.proc_list if not proc.pid]
+        self.proc_list = [proc for proc in self.proc_list if proc.pid]
         print(len(self.proc_list))
 
     def maintain(self):
