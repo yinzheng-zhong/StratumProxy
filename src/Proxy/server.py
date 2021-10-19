@@ -78,6 +78,7 @@ class StratumServer:
         thread_periodic_calls.join()
 
     def init_coin(self, data_dic):
+        Logger.debug('Entered init_coin')
         self.last_switching = time.time()
 
         coin = self.api.get_most_profitable()
@@ -86,6 +87,7 @@ class StratumServer:
         for i in range(len(req_params)):
             # initial phase, get proxy from miner
             if 'proxy' in req_params[i]:
+                Logger.debug('proxy keyword detected')
                 req_params[i] = self.setting.get_param() + ',mc=' + coin
 
         json_data = json.dumps(data_dic) + '\n'
@@ -97,6 +99,7 @@ class StratumServer:
         Logger.warning('\nMiner Switching to $' + coin)
 
     def choose_coin(self):
+        Logger.debug('Entered choose_coin')
         self.last_switching = time.time()
 
         coin = self.api.get_most_profitable()
@@ -208,6 +211,7 @@ class StratumServer:
             data_dic = json.loads(miner_data)
 
             if data_dic['method'] == 'mining.authorize' or data_dic['method'] == 'eth_submitLogin':
+                Logger.debug('Mining authorize detected')
                 self.init_coin(data_dic)
             else:  # decode and put into queue
                 self.pool_sending_queue.put(miner_data)
