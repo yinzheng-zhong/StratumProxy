@@ -26,7 +26,7 @@ class ProcManager:
 
 
 filename = 'main.py ' + sys.argv[1]
-num_processes = int(sys.argv[1])
+num_processes = int(sys.argv[2])
 pm = ProcManager(filename, num_processes)
 
 
