@@ -8,12 +8,12 @@ filename = 'main.py ' + arg
 
 clients = []
 
-while len(clients) < 10:
+while len(clients) < 100:
     clients.append(subprocess.Popen('python3 ' + filename, shell=True))
 
 while True:
     for proc in clients:
-        if not proc.pid:
+        if proc.poll() is not None:
             proc = subprocess.Popen('python3 ' + filename, shell=True)
 
     time.sleep(1)
