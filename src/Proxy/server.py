@@ -1,4 +1,6 @@
 import socket
+import sys
+
 from src.Proxy.client import Client
 from src.Api.api import Api
 import time
@@ -12,10 +14,9 @@ import select
 
 
 class StratumServer:
-    def __init__(self, algo):
+    def __init__(self, algo, server):
         self.algo = algo
         self.setting = ConfigReader(algo)
-        self.port = self.setting.get_server_port()
         self.last_switching = np.inf
         self.last_coin = ''
 
@@ -25,11 +26,11 @@ class StratumServer:
         self.api = Api(algo, self.setting.get_coins())
         self.client = Client(algo)
 
-        self.server = None
+        self.server = server
         self.server_conn = None
         self.exit_signal = False
 
-        self._start_server()
+        #self._start_server()
 
     def _start_server(self):
         self.exit_signal = False
@@ -37,11 +38,12 @@ class StratumServer:
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
         self.server.bind(("0.0.0.0", self.port))
         self.server.listen(5)
-
-        self.server_conn, addr = self.server.accept()
         #self.server_conn.setblocking(False)
 
     def run(self):
+        self.server_conn, addr = self.server.accept()
+        self.exit_signal = False
+
         thread_pool_receiver = threading.Thread(target=self.receive_from_pool)
         thread_pool_processor = threading.Thread(target=self.process_from_pool)
         thread_miner_receiver = threading.Thread(target=self.receive_from_miner)
@@ -68,12 +70,14 @@ class StratumServer:
         thread_periodic_calls.start()
         Logger.debug('thread_periodic_calls started')
 
-        thread_pool_receiver.join()
-        thread_pool_processor.join()
-        thread_miner_receiver.join()
-        thread_miner_processor.join()
-        thread_pool_sender.join()
-        thread_periodic_calls.join()
+        return self
+
+        #thread_pool_receiver.join()
+        #thread_pool_processor.join()
+        #thread_miner_receiver.join()
+        #thread_miner_processor.join()
+        #thread_pool_sender.join()
+        #thread_periodic_calls.join()
 
     def init_coin(self, data_dic):
         Logger.debug('Entered init_coin')
@@ -115,7 +119,8 @@ class StratumServer:
 
     def restart(self):
         self.exit_signal = True
-        raise Exception('Server restart')
+        Logger.warning('Server restart')
+        sys.exit()
 
     def periodic_calls(self):
         while True:
