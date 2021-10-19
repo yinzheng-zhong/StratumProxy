@@ -2,13 +2,12 @@ import subprocess
 import time
 import sys
 
-arg = sys.argv[1]
 
-filename = 'main.py ' + arg
+filename = 'main.py ' + sys.argv[1]
 
 clients = []
 
-while len(clients) < 10:
+while len(clients) < sys.argv[2]:
     clients.append(subprocess.Popen('python3 ' + filename, shell=True))
 
 while True:
