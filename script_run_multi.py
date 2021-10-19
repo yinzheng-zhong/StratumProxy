@@ -16,6 +16,8 @@ def manage():
 
 threads = []
 for i in range(int(sys.argv[2])):
-    a = threading.Thread(target=manage)
-    a.start()
-    a.join()
+    threads.append(threading.Thread(target=manage))
+
+for thread in threads:
+    thread.start()
+    thread.join()
