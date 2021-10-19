@@ -7,7 +7,7 @@ filename = 'main.py ' + sys.argv[1]
 
 clients = []
 
-while len(clients) < sys.argv[2]:
+while len(clients) < int(sys.argv[2]):
     clients.append(subprocess.Popen('python3 ' + filename, shell=True))
 
 while True:
