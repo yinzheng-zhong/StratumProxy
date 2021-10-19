@@ -41,7 +41,7 @@ class StratumServer:
         self.server.listen(5)
 
         self.server_conn, addr = self.server.accept()
-        self.server.setblocking(False)
+        self.server_conn.setblocking(False)
 
     def run(self):
         thread_pool_receiver = threading.Thread(target=self.receive_from_pool)
