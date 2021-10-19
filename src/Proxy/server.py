@@ -6,7 +6,7 @@ import numpy as np
 from src.Helper.config_reader import ConfigReader
 import json
 import queue
-import logging
+from src.Model.logger import Logger
 import threading
 import select
 
@@ -31,7 +31,6 @@ class StratumServer:
         self.server_conn = None
         self.exit_signal = False
 
-        logging.basicConfig(level=self.setting.get_logging_level())
         self._start_server()
 
     def _start_server(self):
@@ -54,22 +53,22 @@ class StratumServer:
         thread_periodic_calls = threading.Thread(target=self.periodic_calls)
 
         thread_pool_receiver.start()
-        logging.debug('thread_pool_receiver started')
+        Logger.debug('thread_pool_receiver started')
 
         thread_pool_processor.start()
-        logging.debug('thread_pool_processor started')
+        Logger.debug('thread_pool_processor started')
 
         thread_miner_receiver.start()
-        logging.debug('thread_mine_receiver started')
+        Logger.debug('thread_mine_receiver started')
 
         thread_miner_processor.start()
-        logging.debug('thread_miner_processor started')
+        Logger.debug('thread_miner_processor started')
 
         thread_pool_sender.start()
-        logging.debug('thread_pool_sender started')
+        Logger.debug('thread_pool_sender started')
 
         thread_periodic_calls.start()
-        logging.debug('thread_periodic_calls started')
+        Logger.debug('thread_periodic_calls started')
 
         thread_pool_receiver.join()
         thread_pool_processor.join()
@@ -94,8 +93,8 @@ class StratumServer:
         self.last_coin = coin
 
         self.pool_sending_queue.put(json_data)
-        logging.warning('\n' + '=' * 256)
-        logging.warning('Miner Switching to $' + coin)
+        Logger.warning('\n' + '=' * 256)
+        Logger.warning('Miner Switching to $' + coin)
 
     def choose_coin(self):
         self.last_switching = time.time()
@@ -103,13 +102,12 @@ class StratumServer:
         coin = self.api.get_most_profitable()
 
         if self.last_coin and coin != self.last_coin:
-            logging.warning('\n' + '=' * 256)
-            logging.warning('Miner Switching to $' + coin)
+            Logger.warning('\nMiner Switching to $' + coin)
             self.exit_signal = True
 
             self.restart()
         else:
-            logging.info('Keep mining $' + coin)
+            Logger.info('Keep mining $' + coin)
 
     def restart(self):
         self.exit_signal = True
@@ -141,15 +139,13 @@ class StratumServer:
 
             enc_data = sending_data.encode('utf-8')
 
-            logging.info('Miner: ' + repr(enc_data))
-
             try:
                 self.client.send(enc_data)
             except OSError as e:
-                logging.error(str(e) + 'OSError in server.py send_to_pool()')
+                Logger.error(str(e) + 'OSError in server.py send_to_pool()')
                 self.client = Client(self.algo)
                 self.client.send(enc_data)
-                logging.error(e)
+                Logger.error(e)
 
     def receive_from_pool(self):
         while True:
@@ -171,7 +167,7 @@ class StratumServer:
             except queue.Empty:
                 continue
 
-            logging.info('Pool: ' + repr(pool_data))
+            Logger.info('Pool: ' + repr(pool_data))
 
             # redirect the data strait to the miner
             self.send_to_miner(pool_data)
@@ -201,6 +197,8 @@ class StratumServer:
                 miner_data = self.miner_receive_queue.get(block=False)
             except queue.Empty:
                 continue
+
+            Logger.info2('Miner: ' + miner_data)
 
             # Here is for worker reg, choose the coin now.
             data_dic = json.loads(miner_data)
