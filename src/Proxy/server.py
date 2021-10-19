@@ -169,7 +169,7 @@ class StratumServer:
                 continue
 
             json_obj = json.loads(pool_data)
-            if 'result' in json_obj.keys() and json_obj['result'] == 'false':
+            if 'result' in json_obj.keys() and json_obj['result'] is False:
                 Logger.warning('Pool: ' + pool_data)
             else:
                 Logger.info2('Pool: ' + repr(pool_data))
