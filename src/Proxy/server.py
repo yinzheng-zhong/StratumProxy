@@ -130,7 +130,7 @@ class StratumServer:
                 return
 
             try:
-                sending_data = self.pool_sending_queue.get(block=False)
+                sending_data = self.pool_sending_queue.get(block=True, timeout=1)
             except queue.Empty as e:
                 continue
 
@@ -163,11 +163,11 @@ class StratumServer:
                 return
 
             try:
-                pool_data = self.client.pool_receive_queue.get(block=False)
+                pool_data = self.client.pool_receive_queue.get(block=True, timeout=1)
             except queue.Empty:
                 continue
 
-            Logger.info('Pool: ' + repr(pool_data))
+            Logger.info2('Pool: ' + repr(pool_data))
 
             # redirect the data strait to the miner
             self.send_to_miner(pool_data)
@@ -194,11 +194,11 @@ class StratumServer:
                 return
 
             try:
-                miner_data = self.miner_receive_queue.get(block=False)
+                miner_data = self.miner_receive_queue.get(block=True, timeout=1)
             except queue.Empty:
                 continue
 
-            Logger.info2('Miner: ' + miner_data)
+            Logger.info('Miner: ' + miner_data)
 
             # Here is for worker reg, choose the coin now.
             data_dic = json.loads(miner_data)
