@@ -18,12 +18,10 @@ class ProcManager:
 
     def remove_dead_procs(self):
         self.proc_list = [proc for proc in self.proc_list if proc.pid]
-        print(len(self.proc_list))
 
     def maintain(self):
         while True:
             self.add_procs()
-            print('*' * 100 + str(len(self.proc_list)) + '*' * 100)
             self.remove_dead_procs()
             time.sleep(1)
 
