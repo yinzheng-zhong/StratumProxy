@@ -26,9 +26,3 @@ class Api:
         except Exception as e:
             logging.warning(e)
             return self.coin_lists[0]
-
-
-if __name__ == '__main__':
-    api = Api('scrypt', ['DGB', 'NAH', 'FLO', 'XSH', 'LTC', 'PYRK', 'GLC', 'EMC2', 'EFL', 'GCN', 'NSD', 'GSR', 'CHEESE', 'XVG', 'LCP'])
-    o = api.get_most_profitable()
-    print()
