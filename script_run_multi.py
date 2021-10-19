@@ -13,7 +13,7 @@ while len(clients) < 10:
 
 while True:
     for proc in clients:
-        if proc.poll() is None:
+        if proc.pid == 0:
             proc = subprocess.Popen('python3 ' + filename, shell=True)
 
     time.sleep(1)
