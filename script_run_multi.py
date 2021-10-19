@@ -9,7 +9,7 @@ filename = 'main.py ' + arg
 clients = []
 
 while True:
-    while len(clients) < 100:
+    while len(clients) < 10:
         clients.append(subprocess.Popen('python3 ' + filename, shell=True))
 
     for proc in clients:
