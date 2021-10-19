@@ -89,6 +89,8 @@ class StratumServer:
 
         json_data = json.dumps(data_dic) + '\n'
 
+        Logger.debug('init_coin() modified request to: ' + json_data)
+
         self.last_coin = coin
 
         self.pool_sending_queue.put(json_data)
