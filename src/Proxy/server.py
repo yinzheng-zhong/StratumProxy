@@ -19,8 +19,6 @@ class StratumServer:
         self.last_switching = np.inf
         self.last_coin = ''
 
-        self.last_id = 0
-
         self.miner_receive_queue = queue.Queue()
         self.pool_sending_queue = queue.Queue()
 
@@ -137,9 +135,6 @@ class StratumServer:
                 sending_data = self.pool_sending_queue.get(block=True, timeout=1)
             except queue.Empty as e:
                 continue
-
-            obj = json.loads(sending_data)
-            self.last_id = obj['id']
 
             enc_data = sending_data.encode('utf-8')
 
