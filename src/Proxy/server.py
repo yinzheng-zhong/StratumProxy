@@ -115,14 +115,15 @@ class StratumServer:
 
     def periodic_calls(self):
         while True:
+
             if time.time() - self.last_switching > 20:
                 self.choose_coin()
                 self.setting.refresh()
 
-            time.sleep(20)
-
             if self.exit_signal:
                 return
+
+            time.sleep(20)
 
     def send_to_pool(self):
         while True:
