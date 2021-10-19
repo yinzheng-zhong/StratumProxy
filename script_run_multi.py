@@ -13,6 +13,7 @@ while len(clients) < int(sys.argv[2]):
 while True:
     for proc in clients:
         if proc.poll() is not None:
+            proc.kill()
             proc = subprocess.Popen('python3 ' + filename, shell=True)
 
     time.sleep(1)
