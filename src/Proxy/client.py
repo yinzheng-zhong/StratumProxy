@@ -1,5 +1,5 @@
 import socket
-import time
+import select
 import logging
 
 from src.Helper.config_reader import ConfigReader
@@ -31,17 +31,14 @@ class Client:
         self.server.sendall(msg)
 
     def receive(self):
-        #try:
-        data = self.server.recv(8000)
-        #except ConnectionResetError:
-        #    time.sleep(10)
-        #    self._connect()
-        #    logging.error('ConnectionResetError in client.py -> receive')
-        #    raise Exception('Restart')
+        ready = select.select([self.server], [], [], 1)
 
-        dec_data = data.decode("utf-8")
-        received = dec_data.split('\n')
+        if ready[0]:
+            data = self.server.recv(8000)
 
-        for rec in received:
-            if rec:
-                self.pool_receive_queue.put(rec + '\n')
+            dec_data = data.decode("utf-8")
+            received = dec_data.split('\n')
+
+            for rec in received:
+                if rec:
+                    self.pool_receive_queue.put(rec + '\n')

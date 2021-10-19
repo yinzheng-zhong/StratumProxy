@@ -8,6 +8,7 @@ import json
 import queue
 import logging
 import threading
+import select
 
 
 class StratumServer:
@@ -180,17 +181,16 @@ class StratumServer:
             if self.exit_signal:
                 return
 
-            try:
+            ready = select.select([self.server_conn], [], [], 1)  # this bit basically block for a second
+            if ready[0]:
                 data = self.server_conn.recv(8000)
-            except socket.error:
-                continue
 
-            dec_data = data.decode("utf-8")
-            received = dec_data.split('\n')
+                dec_data = data.decode("utf-8")
+                received = dec_data.split('\n')
 
-            for rec in received:
-                if rec:
-                    self.miner_receive_queue.put(rec + '\n')
+                for rec in received:
+                    if rec:
+                        self.miner_receive_queue.put(rec + '\n')
 
     def process_from_miner(self):
         while True:
