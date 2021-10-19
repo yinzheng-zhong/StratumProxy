@@ -13,11 +13,11 @@ class ProcManager:
         self.maintain()
 
     def add_procs(self):
-        while len(self.proc_list) <= self.num_procs:
+        while len(self.proc_list) < self.num_procs:
             self.proc_list.append(subprocess.Popen('python3 ' + self.filename, shell=True))
 
     def remove_dead_procs(self):
-        self.proc_list = [proc for proc in self.proc_list if proc.poll()]
+        self.proc_list = [proc for proc in self.proc_list if not proc.pid]
         print(len(self.proc_list))
 
     def maintain(self):
