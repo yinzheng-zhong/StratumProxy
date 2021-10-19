@@ -94,7 +94,7 @@ class StratumServer:
 
         self.pool_sending_queue.put(json_data)
         Logger.warning('\n' + '=' * 256)
-        Logger.warning('Miner Switching to $' + coin)
+        Logger.warning('\nMiner Switching to $' + coin)
 
     def choose_coin(self):
         self.last_switching = time.time()
