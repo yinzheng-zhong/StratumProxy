@@ -79,7 +79,6 @@ class StratumServer:
 
     def init_coin(self, data_dic):
         Logger.debug('Entered init_coin')
-        self.last_switching = time.time()
 
         coin = self.api.get_most_profitable()
 
@@ -97,6 +96,8 @@ class StratumServer:
         self.pool_sending_queue.put(json_data)
         Logger.warning('\n' + '=' * 256)
         Logger.warning('\nMiner Switching to $' + coin)
+
+        self.last_switching = time.time()
 
     def choose_coin(self):
         Logger.debug('Entered choose_coin')

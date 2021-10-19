@@ -20,30 +20,30 @@ class Logger:
 
     @staticmethod
     def warning(msg=''):
-        if Logger.level >= logging.WARNING:
+        if Logger.level <= logging.WARNING:
             print(Logger.WARNING + 'WARNING: ' + msg + Logger.ENDC)
 
     @staticmethod
     def error(msg=''):
-        if Logger.level >= logging.ERROR:
+        if Logger.level <= logging.ERROR:
             print(Logger.ERROR + 'ERROR: ' + msg + Logger.ENDC)
 
     @staticmethod
     def debug(msg=''):
-        if Logger.level >= logging.DEBUG:
+        if Logger.level <= logging.DEBUG:
             print(Logger.DEBUG + 'DEBUG: ' + msg + Logger.ENDC)
 
     @staticmethod
     def info(msg=''):
-        if Logger.level >= logging.INFO:
+        if Logger.level <= logging.INFO:
             print(Logger.INFO + 'INFO: ' + msg + Logger.ENDC)
 
     @staticmethod
     def info2(msg=''):
-        if Logger.level >= logging.INFO:
+        if Logger.level <= logging.INFO:
             print(Logger.INFO2 + 'INFO: ' + msg + Logger.ENDC)
 
     @staticmethod
     def critical(msg=''):
-        if Logger.level >= logging.CRITICAL:
+        if Logger.level <= logging.CRITICAL:
             print(Logger.CRITICAL + 'CRITICAL: ' + msg + Logger.ENDC)
