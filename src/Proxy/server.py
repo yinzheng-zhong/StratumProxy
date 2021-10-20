@@ -114,6 +114,7 @@ class StratumServer:
     def restart(self):
         self.exit_signal = True
         Logger.warning('Server restart')
+        self.server_conn.close()
         time.sleep(1.5)
         raise Exception('Server restart')
 
