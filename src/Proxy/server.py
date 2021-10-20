@@ -99,7 +99,7 @@ class StratumServer:
         self.last_switching = time.time()
 
     def choose_coin(self):
-        if time.time() - self.last_switching < 20:
+        if time.time() - self.last_switching < 10:
             return
 
         Logger.debug('Entered choose_coin', id_=self.id_)
@@ -151,7 +151,6 @@ class StratumServer:
                 Logger.error(str(e) + 'OSError in server.py send_to_pool()', id_=self.id_)
                 self.client = Client(self.algo)
                 self.client.send(enc_data)
-                Logger.error(e, id_=self.id_)
 
     def receive_from_pool(self):
         while True:
