@@ -8,7 +8,6 @@ from src.Api.api import Api
 
 if __name__ == '__main__':
     arg = sys.argv[1]
-    print('Mining using ' + arg)
 
     list_conns = []
     setting = ConfigReader(arg)

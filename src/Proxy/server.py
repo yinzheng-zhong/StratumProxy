@@ -34,6 +34,8 @@ class StratumServer:
 
     def run(self):
         self.server_conn, addr = self.server.accept()
+        Logger.warning('New conn from ' + addr)
+
         self.exit_signal = False
 
         thread_pool_receiver = threading.Thread(target=self.receive_from_pool)
