@@ -189,7 +189,12 @@ class StratumServer:
 
             ready = select.select([self.server_conn], [], [], 1)  # this bit basically block for a second
             if ready[0]:
-                data = self.server_conn.recv(8000)
+                try:
+                    data = self.server_conn.recv(8000)
+                except ConnectionAbortedError:
+                    Logger.warning('ConnectionAbortedError')
+                    data = None
+                    self.restart()
 
                 dec_data = data.decode("utf-8")
                 received = dec_data.split('\n')

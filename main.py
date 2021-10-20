@@ -22,8 +22,8 @@ if __name__ == '__main__':
         while True:
             list_conns.append(StratumServer(arg, server).run())
 
-            Logger.warning('Added connection')
             list_conns = [conn for conn in list_conns if not conn.exit_signal]
+            Logger.warning('list_conns' + str(len(list_conns)))
 
     except Exception as e:
         print('Error', e)
