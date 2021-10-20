@@ -29,6 +29,7 @@ class Api:
                             coin_to_mine = i
 
             self.last_request = time.time()
+            self.last_coin = coin_to_mine
 
             return coin_to_mine
         except Exception as e:
