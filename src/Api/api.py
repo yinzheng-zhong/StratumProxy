@@ -12,7 +12,7 @@ class Api:
 
     def get_most_profitable(self):
         try:
-            if time.time() - self.last_request < 30:
+            if time.time() - self.last_request < 10:
                 return self.last_coin
 
             response = requests.get("http://api.zergpool.com:8080/api/currencies").json()

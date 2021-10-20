@@ -98,6 +98,9 @@ class StratumServer:
         self.last_switching = time.time()
 
     def choose_coin(self):
+        if time.time() - self.last_switching < 20:
+            return
+
         Logger.debug('Entered choose_coin')
         self.last_switching = time.time()
 
@@ -115,7 +118,7 @@ class StratumServer:
         self.exit_signal = True
         Logger.warning('Server restart')
         self.server_conn.close()
-        time.sleep(1.5)
+        time.sleep(0.15)
         raise Exception('Server restart')
 
     def periodic_calls(self):
@@ -124,11 +127,9 @@ class StratumServer:
                 Logger.debug('periodic_calls exit_signal')
                 return
 
-            if time.time() - self.last_switching > 60:
-                self.choose_coin()
-                self.setting.refresh()
+            self.choose_coin()
 
-            time.sleep(1)
+            time.sleep(0.1)
 
     def send_to_pool(self):
         while True:
@@ -137,7 +138,7 @@ class StratumServer:
                 return
 
             try:
-                sending_data = self.pool_sending_queue.get(block=True, timeout=1)
+                sending_data = self.pool_sending_queue.get(block=True, timeout=0.1)
             except queue.Empty as e:
                 continue
 
@@ -169,7 +170,7 @@ class StratumServer:
                 return
 
             try:
-                pool_data = self.client.pool_receive_queue.get(block=True, timeout=1)
+                pool_data = self.client.pool_receive_queue.get(block=True, timeout=0.1)
             except queue.Empty:
                 continue
 
@@ -188,7 +189,7 @@ class StratumServer:
                 Logger.debug('receive_from_miner exit_signal')
                 return
 
-            ready = select.select([self.server_conn], [], [], 1)  # this bit basically block for a second
+            ready = select.select([self.server_conn], [], [], 0.1)  # this bit basically block for a second
             if ready[0]:
                 try:
                     data = self.server_conn.recv(8000)
@@ -211,7 +212,7 @@ class StratumServer:
                 return
 
             try:
-                miner_data = self.miner_receive_queue.get(block=True, timeout=1)
+                miner_data = self.miner_receive_queue.get(block=True, timeout=0.1)
             except queue.Empty:
                 continue
 

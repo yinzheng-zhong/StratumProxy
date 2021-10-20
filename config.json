@@ -11,7 +11,7 @@
                    "server_port": 3335
         },
         "sha256": {
-          "coins": ["BCA", "DGB", "LCC", "XEC", "SHND", "DVT", "PYRK", "BVG", "CHTA"],
+          "coins": ["BCA", "DGB", "LCC", "XEC", "SHND", "DVT", "PYRK", "BVG", "CHTA", "FCH"],
                    "pool_port": 3333,
                    "server_port": 3333
         }

@@ -5,6 +5,7 @@ import time
 import socket
 from src.Model.logger import Logger
 from src.Api.api import Api
+import gc
 
 if __name__ == '__main__':
     arg = sys.argv[1]
@@ -24,10 +25,16 @@ if __name__ == '__main__':
         while True:
             list_conns.append(StratumServer(arg, server, api).run())
 
+            new_list = []
             for conn in list_conns:
                 if conn.exit_signal:
                     Logger.warning('Delete conn' + str(conn))
                     del conn
+                else:
+                    new_list.append(conn)
+
+            list_conns = new_list[:]
+            gc.collect()
 
             Logger.warning('list_conns' + str(len(list_conns)))
 

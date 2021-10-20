@@ -31,7 +31,7 @@ class Client:
         self.server.sendall(msg)
 
     def receive(self):
-        ready = select.select([self.server], [], [], 1)
+        ready = select.select([self.server], [], [], 0.1)
 
         if ready[0]:
             data = self.server.recv(8000)
