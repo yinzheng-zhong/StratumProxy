@@ -25,7 +25,11 @@ if __name__ == '__main__':
         while True:
             list_conns.append(StratumServer(arg, server, api).run())
 
-            list_conns = [conn for conn in list_conns if not conn.exit_signal]
+            for conn in list_conns:
+                if conn.exit_signal:
+                    Logger.warning('Delete conn' + str(conn))
+                    del conn
+
             Logger.warning('list_conns' + str(len(list_conns)))
 
     except Exception as e:
