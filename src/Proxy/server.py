@@ -34,7 +34,7 @@ class StratumServer:
 
     def run(self):
         self.server_conn, addr = self.server.accept()
-        Logger.warning('New conn from ' + addr)
+        Logger.warning('New conn from ' + str(addr))
 
         self.exit_signal = False
 
