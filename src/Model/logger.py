@@ -19,31 +19,31 @@ class Logger:
     UNDERLINE = '\033[4m'
 
     @staticmethod
-    def warning(msg=''):
+    def warning(msg='', id_=''):
         if Logger.level <= logging.WARNING:
-            print(Logger.WARNING + 'WARNING: ' + msg + Logger.ENDC)
+            print(Logger.WARNING + id_ + ' WARNING: ' + msg + Logger.ENDC)
 
     @staticmethod
-    def error(msg=''):
+    def error(msg='', id_=''):
         if Logger.level <= logging.ERROR:
-            print(Logger.ERROR + 'ERROR: ' + msg + Logger.ENDC)
+            print(Logger.ERROR + id_ + ' ERROR: ' + msg + Logger.ENDC)
 
     @staticmethod
-    def debug(msg=''):
+    def debug(msg='', id_=''):
         if Logger.level <= logging.DEBUG:
-            print(Logger.DEBUG + 'DEBUG: ' + msg + Logger.ENDC)
+            print(Logger.DEBUG + id_ + ' DEBUG: ' + msg + Logger.ENDC)
 
     @staticmethod
-    def info(msg=''):
+    def info(msg='', id_=''):
         if Logger.level <= logging.INFO:
-            print(Logger.INFO + 'INFO: ' + msg + Logger.ENDC)
+            print(Logger.INFO + id_ + ' INFO: ' + msg + Logger.ENDC)
 
     @staticmethod
-    def info2(msg=''):
+    def info2(msg='', id_=''):
         if Logger.level <= logging.INFO:
-            print(Logger.INFO2 + 'INFO: ' + msg + Logger.ENDC)
+            print(Logger.INFO2 + id_ + ' INFO: ' + msg + Logger.ENDC)
 
     @staticmethod
-    def critical(msg=''):
+    def critical(msg='', id_=''):
         if Logger.level <= logging.CRITICAL:
-            print(Logger.CRITICAL + 'CRITICAL: ' + msg + Logger.ENDC)
+            print(Logger.CRITICAL + id_ + ' CRITICAL: ' + msg + Logger.ENDC)

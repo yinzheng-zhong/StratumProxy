@@ -30,11 +30,12 @@ class StratumServer:
         self.server_conn = None
         self.exit_signal = False
 
-        #self._start_server()
+        self.id_ = str(self)
+
 
     def run(self):
         self.server_conn, addr = self.server.accept()
-        Logger.warning('New conn from ' + str(addr))
+        Logger.warning('New conn from ' + str(addr), id_=self.id_)
 
         self.exit_signal = False
 
@@ -47,22 +48,22 @@ class StratumServer:
         thread_periodic_calls = threading.Thread(target=self.periodic_calls)
 
         thread_pool_receiver.start()
-        Logger.debug('thread_pool_receiver started')
+        Logger.debug('thread_pool_receiver started', id_=self.id_)
 
         thread_pool_processor.start()
-        Logger.debug('thread_pool_processor started')
+        Logger.debug('thread_pool_processor started', id_=self.id_)
 
         thread_miner_receiver.start()
-        Logger.debug('thread_mine_receiver started')
+        Logger.debug('thread_mine_receiver started', id_=self.id_)
 
         thread_miner_processor.start()
-        Logger.debug('thread_miner_processor started')
+        Logger.debug('thread_miner_processor started', id_=self.id_)
 
         thread_pool_sender.start()
-        Logger.debug('thread_pool_sender started')
+        Logger.debug('thread_pool_sender started', id_=self.id_)
 
         thread_periodic_calls.start()
-        Logger.debug('thread_periodic_calls started')
+        Logger.debug('thread_periodic_calls started', id_=self.id_)
 
         return self
 
@@ -74,7 +75,7 @@ class StratumServer:
         #thread_periodic_calls.join()
 
     def init_coin(self, data_dic):
-        Logger.debug('Entered init_coin')
+        Logger.debug('Entered init_coin', id_=self.id_)
 
         coin = self.api.get_most_profitable()
 
@@ -82,18 +83,18 @@ class StratumServer:
         for i in range(len(req_params)):
             # initial phase, get proxy from miner
             if 'proxy' in req_params[i]:
-                Logger.debug('proxy keyword detected')
+                Logger.debug('proxy keyword detected', id_=self.id_)
                 req_params[i] = self.setting.get_param() + ',mc=' + coin
 
         json_data = json.dumps(data_dic) + '\n'
 
-        Logger.debug('init_coin() modified request to: ' + json_data)
+        Logger.debug('init_coin() modified request to: ' + json_data, id_=self.id_)
 
         self.last_coin = coin
 
         self.pool_sending_queue.put(json_data)
-        Logger.warning('\n' + '=' * 256)
-        Logger.warning('\nMiner start to mine $' + coin)
+        Logger.warning('\n' + '=' * 256, id_=self.id_)
+        Logger.warning('\nMiner start to mine $' + coin, id_=self.id_)
 
         self.last_switching = time.time()
 
@@ -101,22 +102,22 @@ class StratumServer:
         if time.time() - self.last_switching < 20:
             return
 
-        Logger.debug('Entered choose_coin')
+        Logger.debug('Entered choose_coin', id_=self.id_)
         self.last_switching = time.time()
 
         coin = self.api.get_most_profitable()
 
         if self.last_coin and coin != self.last_coin:
-            Logger.warning('\nMiner Switching to $' + coin)
+            Logger.warning('\nMiner Switching to $' + coin, id_=self.id_)
             self.exit_signal = True
 
             self.restart()
         else:
-            Logger.info('Keep mining $' + coin)
+            Logger.info('Keep mining $' + coin, id_=self.id_)
 
     def restart(self):
         self.exit_signal = True
-        Logger.warning('Server restart')
+        Logger.warning('Server restart', id_=self.id_)
         self.server_conn.close()
         time.sleep(0.15)
         # raise Exception('Server restart')
@@ -124,7 +125,7 @@ class StratumServer:
     def periodic_calls(self):
         while True:
             if self.exit_signal:
-                Logger.debug('periodic_calls exit_signal')
+                Logger.debug('periodic_calls exit_signal', id_=self.id_)
                 return
 
             self.choose_coin()
@@ -134,7 +135,7 @@ class StratumServer:
     def send_to_pool(self):
         while True:
             if self.exit_signal:
-                Logger.debug('send_to_pool exit_signal')
+                Logger.debug('send_to_pool exit_signal', id_=self.id_)
                 return
 
             try:
@@ -147,15 +148,15 @@ class StratumServer:
             try:
                 self.client.send(enc_data)
             except OSError as e:
-                Logger.error(str(e) + 'OSError in server.py send_to_pool()')
+                Logger.error(str(e) + 'OSError in server.py send_to_pool()', id_=self.id_)
                 self.client = Client(self.algo)
                 self.client.send(enc_data)
-                Logger.error(e)
+                Logger.error(e, id_=self.id_)
 
     def receive_from_pool(self):
         while True:
             if self.exit_signal:
-                Logger.debug('receive_from_pool exit_signal')
+                Logger.debug('receive_from_pool exit_signal', id_=self.id_)
                 return
 
             try:
@@ -166,7 +167,7 @@ class StratumServer:
     def process_from_pool(self):
         while True:
             if self.exit_signal:
-                Logger.debug('process_from_pool exit_signal')
+                Logger.debug('process_from_pool exit_signal', id_=self.id_)
                 return
 
             try:
@@ -176,9 +177,9 @@ class StratumServer:
 
             json_obj = json.loads(pool_data)
             if 'result' in json_obj.keys() and json_obj['result'] is False:
-                Logger.warning('Pool: ' + pool_data)
+                Logger.warning('Pool: ' + pool_data, id_=self.id_)
             else:
-                Logger.info2('Pool: ' + repr(pool_data))
+                Logger.info2('Pool: ' + repr(pool_data), id_=self.id_)
 
             # redirect the data strait to the miner
             self.send_to_miner(pool_data)
@@ -186,7 +187,7 @@ class StratumServer:
     def receive_from_miner(self):
         while True:
             if self.exit_signal:
-                Logger.debug('receive_from_miner exit_signal')
+                Logger.debug('receive_from_miner exit_signal', id_=self.id_)
                 return
 
             ready = select.select([self.server_conn], [], [], 0.1)  # this bit basically block for a second
@@ -194,7 +195,7 @@ class StratumServer:
                 try:
                     data = self.server_conn.recv(8000)
                 except ConnectionAbortedError:
-                    Logger.warning('ConnectionAbortedError')
+                    Logger.warning('ConnectionAbortedError', id_=self.id_)
                     data = None
                     self.restart()
 
@@ -213,7 +214,7 @@ class StratumServer:
     def process_from_miner(self):
         while True:
             if self.exit_signal:
-                Logger.debug('process_from_miner exit_signal')
+                Logger.debug('process_from_miner exit_signal', id_=self.id_)
                 return
 
             try:
@@ -221,13 +222,13 @@ class StratumServer:
             except queue.Empty:
                 continue
 
-            Logger.info('Miner: ' + miner_data)
+            Logger.info('Miner: ' + miner_data, id_=self.id_)
 
             # Here is for worker reg, choose the coin now.
             data_dic = json.loads(miner_data)
 
             if data_dic['method'] == 'mining.authorize' or data_dic['method'] == 'eth_submitLogin':
-                Logger.debug('Mining authorize detected')
+                Logger.debug('Mining authorize detected', id_=self.id_)
                 self.init_coin(data_dic)
             else:  # decode and put into queue
                 self.pool_sending_queue.put(miner_data)
