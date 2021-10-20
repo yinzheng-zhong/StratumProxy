@@ -17,6 +17,6 @@
         }
     },
 
-  "debug_level": "warning",
+  "debug_level": "info",
   "param": "c=BTC,m=solo"
 }    
