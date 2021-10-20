@@ -32,14 +32,6 @@ class StratumServer:
 
         #self._start_server()
 
-    def _start_server(self):
-        self.exit_signal = False
-        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
-        self.server.bind(("0.0.0.0", self.port))
-        self.server.listen(5)
-        #self.server_conn.setblocking(False)
-
     def run(self):
         self.server_conn, addr = self.server.accept()
         self.exit_signal = False
@@ -99,7 +91,7 @@ class StratumServer:
 
         self.pool_sending_queue.put(json_data)
         Logger.warning('\n' + '=' * 256)
-        Logger.warning('\nMiner Switching to $' + coin)
+        Logger.warning('\nMiner start to mine $' + coin)
 
         self.last_switching = time.time()
 
@@ -120,14 +112,13 @@ class StratumServer:
     def restart(self):
         self.exit_signal = True
         Logger.warning('Server restart')
-        sys.exit()
 
     def periodic_calls(self):
         while True:
             if self.exit_signal:
                 return
 
-            if time.time() - self.last_switching > 20:
+            if time.time() - self.last_switching > 60:
                 self.choose_coin()
                 self.setting.refresh()
 
