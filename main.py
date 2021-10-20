@@ -32,5 +32,5 @@ if __name__ == '__main__':
             Logger.warning('list_conns' + str(len(list_conns)))
 
     except Exception as e:
-        print('Error', e)
+        print('Error at Main', e)
         sys.exit()
