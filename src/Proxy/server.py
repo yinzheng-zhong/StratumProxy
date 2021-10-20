@@ -14,7 +14,7 @@ import select
 
 
 class StratumServer:
-    def __init__(self, algo, server):
+    def __init__(self, algo, server, coin_profit_api):
         self.algo = algo
         self.setting = ConfigReader(algo)
         self.last_switching = np.inf
@@ -23,7 +23,7 @@ class StratumServer:
         self.miner_receive_queue = queue.Queue()
         self.pool_sending_queue = queue.Queue()
 
-        self.api = Api(algo, self.setting.get_coins())
+        self.api = coin_profit_api
         self.client = Client(algo)
 
         self.server = server
