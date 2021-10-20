@@ -30,8 +30,7 @@ class StratumServer:
         self.server_conn = None
         self.exit_signal = False
 
-        self.id_ = str(self)
-
+        self.id_ = str(self).split('0x')[-1]
 
     def run(self):
         self.server_conn, addr = self.server.accept()
@@ -84,7 +83,7 @@ class StratumServer:
             # initial phase, get proxy from miner
             if 'proxy' in req_params[i]:
                 Logger.debug('proxy keyword detected', id_=self.id_)
-                req_params[i] = self.setting.get_param() + ',mc=' + coin
+                req_params[i] = self.setting.get_param(coin) + ',mc=' + coin
 
         json_data = json.dumps(data_dic) + '\n'
 
@@ -99,7 +98,7 @@ class StratumServer:
         self.last_switching = time.time()
 
     def choose_coin(self):
-        if time.time() - self.last_switching < 10:
+        if time.time() - self.last_switching < 1:
             return
 
         Logger.debug('Entered choose_coin', id_=self.id_)
@@ -112,8 +111,6 @@ class StratumServer:
             self.exit_signal = True
 
             self.restart()
-        else:
-            Logger.info('Keep mining $' + coin, id_=self.id_)
 
     def restart(self):
         self.exit_signal = True

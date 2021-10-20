@@ -1,22 +1,56 @@
 {
   "setting": {
-        "scrypt": {
-          "coins": ["DGB", "NAH", "FLO", "XSH", "LTC", "PYRK", "GLC", "EMC2", "EFL", "GCN", "NSD", "GSR", "CHEESE", "XVG", "LCP"],
-                   "pool_port": 3433,
-                   "server_port": 3334
-        },
-        "ethash": {
-          "coins": ["ETH", "NUKO", "TSF", "CLO", "EXP", "ATH", "EGEM", "PRKL", "NILU"],
-                   "pool_port": 9999,
-                   "server_port": 3335
-        },
-        "sha256": {
-          "coins": ["BCA", "DGB", "LCC", "XEC", "SHND", "DVT", "PYRK", "BVG", "CHTA", "FCH"],
-                   "pool_port": 3333,
-                   "server_port": 3333
-        }
+    "scrypt": {
+      "coins": {
+        "DGB": "c=BTC",
+        "NAH": "c=BTC,m=solo",
+        "FLO": "c=BTC,m=solo",
+        "XSH": "c=BTC,m=solo",
+        "LTC": "c=BTC",
+        "PYRK": "c=BTC,m=solo",
+        "GLC": "c=BTC,m=solo",
+        "EMC2": "c=BTC,m=solo",
+        "GCN": "c=BTC,m=solo",
+        "NSD": "c=BTC,m=solo",
+        "CHEESE": "c=BTC,m=solo",
+        "XVG": "c=BTC",
+        "LCP": "c=BTC,m=solo"
+      },
+      "pool_port": 3433,
+      "server_port": 3334
     },
-
-  "debug_level": "debug",
-  "param": "c=BTC,m=solo"
+    "ethash": {
+      "coins": {
+        "ETH": "c=BTC",
+        "NUKO": "c=BTC,m=solo",
+        "TSF": "c=BTC",
+        "CLO": "c=BTC",
+        "EXP": "c=BTC,m=solo",
+        "ATH": "c=BTC,m=solo",
+        "EGEM": "c=BTC,m=solo",
+        "PRKL": "c=BTC,m=solo",
+        "NILU": "c=BTC,m=solo"
+      },
+      "pool_port": 9999,
+      "server_port": 3335
+    },
+    "sha256": {
+      "coins": {
+        "BCA": "c=BTC,m=solo",
+        "DGB": "c=BTC",
+        "LCC": "c=BTC,m=solo",
+        "XEC": "c=BTC",
+        "SHND": "c=BTC,m=solo",
+        "DVT": "c=BTC,m=solo",
+        "PYRK": "c=BTC,m=solo",
+        "BVG": "c=BTC,m=solo",
+        "CHTA": "c=BTC,m=solo",
+        "FCH": "c=BTC,m=solo"
+      },
+      "pool_port": 3333,
+      "server_port": 3333
+    }
+  },
+  "debug_level": "info",
+  "param": "c=BTC"
 }    

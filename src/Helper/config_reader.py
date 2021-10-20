@@ -18,7 +18,7 @@ class ConfigReader:
         return data
 
     def get_coins(self):
-        return self.data_settings[self.algo]['coins']
+        return self.data_settings[self.algo]['coins'].keys()
 
     def get_pool_port(self):
         return self.data_settings[self.algo]['pool_port']
@@ -26,8 +26,8 @@ class ConfigReader:
     def get_server_port(self):
         return self.data_settings[self.algo]['server_port']
 
-    def get_param(self):
-        return self.data['param']
+    def get_param(self, coin):
+        return self.data_settings[self.algo]['coins'][coin]
 
     def refresh(self):
         self.data = self._read_file()

@@ -8,11 +8,11 @@ from src.Api.api import Api
 import gc
 
 if __name__ == '__main__':
-    arg = sys.argv[1]
+    algo = sys.argv[1]
 
     list_conns = []
-    setting = ConfigReader(arg)
-    api = Api(arg, setting.get_coins())
+    setting = ConfigReader(algo)
+    api = Api(algo, setting.get_coins())
 
     port = setting.get_server_port()
 
@@ -23,7 +23,7 @@ if __name__ == '__main__':
         server.listen(5)
 
         while True:
-            list_conns.append(StratumServer(arg, server, api).run())
+            list_conns.append(StratumServer(algo, server, api).run())
 
             new_list = []
             for conn in list_conns:
