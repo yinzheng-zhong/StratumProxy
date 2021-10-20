@@ -198,7 +198,12 @@ class StratumServer:
                     data = None
                     self.restart()
 
-                dec_data = data.decode("utf-8")
+                try:
+                    dec_data = data.decode("utf-8")
+                except AttributeError:
+                    self.restart()
+                    return
+
                 received = dec_data.split('\n')
 
                 for rec in received:
