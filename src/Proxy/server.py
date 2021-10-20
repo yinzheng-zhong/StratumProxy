@@ -196,8 +196,12 @@ class StratumServer:
                     data = self.server_conn.recv(8000)
                 except ConnectionAbortedError:
                     Logger.warning('ConnectionAbortedError', id_=self.id_)
-                    data = None
                     self.restart()
+                    return
+                except OSError:
+                    Logger.warning('Socket might already closed', id_=self.id_)
+                    self.restart()
+                    return
 
                 try:
                     dec_data = data.decode("utf-8")
