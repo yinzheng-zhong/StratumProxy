@@ -116,6 +116,7 @@ class StratumServer:
     def periodic_calls(self):
         while True:
             if self.exit_signal:
+                Logger.debug('periodic_calls exit_signal')
                 return
 
             if time.time() - self.last_switching > 60:
@@ -127,6 +128,7 @@ class StratumServer:
     def send_to_pool(self):
         while True:
             if self.exit_signal:
+                Logger.debug('send_to_pool exit_signal')
                 return
 
             try:
@@ -147,6 +149,7 @@ class StratumServer:
     def receive_from_pool(self):
         while True:
             if self.exit_signal:
+                Logger.debug('receive_from_pool exit_signal')
                 return
 
             try:
@@ -157,6 +160,7 @@ class StratumServer:
     def process_from_pool(self):
         while True:
             if self.exit_signal:
+                Logger.debug('process_from_pool exit_signal')
                 return
 
             try:
@@ -176,6 +180,7 @@ class StratumServer:
     def receive_from_miner(self):
         while True:
             if self.exit_signal:
+                Logger.debug('receive_from_miner exit_signal')
                 return
 
             ready = select.select([self.server_conn], [], [], 1)  # this bit basically block for a second
@@ -197,6 +202,7 @@ class StratumServer:
     def process_from_miner(self):
         while True:
             if self.exit_signal:
+                Logger.debug('process_from_miner exit_signal')
                 return
 
             try:
