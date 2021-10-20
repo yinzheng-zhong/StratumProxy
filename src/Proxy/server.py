@@ -112,6 +112,8 @@ class StratumServer:
     def restart(self):
         self.exit_signal = True
         Logger.warning('Server restart')
+        time.sleep(1.5)
+        raise Exception('Server restart')
 
     def periodic_calls(self):
         while True:
