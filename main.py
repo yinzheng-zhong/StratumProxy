@@ -22,12 +22,17 @@ if __name__ == '__main__':
         server.bind(("0.0.0.0", port))
         server.listen(5)
 
+        is_profitable = True
+
         while True:
             _, profitability = api.get_most_profitable()
+
             if profitability * 0.95 > 0.0062:
+                is_profitable = True
                 list_conns.append(StratumServer(algo, server, api).run())
-            else:
+            elif is_profitable:
                 Logger.warning('No profitable at the moment: ' + str(profitability))
+                is_profitable = False
 
             new_list = []
             for conn in list_conns:
