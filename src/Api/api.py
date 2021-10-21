@@ -1,5 +1,5 @@
 import requests
-import logging
+from src.Model.logger import Logger
 import time
 
 
@@ -28,10 +28,11 @@ class Api:
                             max_profit = current_estimate
                             coin_to_mine = i
 
+            Logger.important('Profitability: ' + str(max_profit))
             self.last_request = time.time()
             self.last_coin = coin_to_mine
 
             return coin_to_mine
         except Exception as e:
-            logging.warning(e)
+            Logger.warning(str(e))
             return self.coin_lists[0]
