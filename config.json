@@ -21,6 +21,7 @@
     },
     "ethash": {
       "coins": {
+        "ETH": "c=BTC",
         "NUKO": "c=BTC,m=solo",
         "TSF": "c=BTC",
         "CLO": "c=BTC",
