@@ -34,12 +34,12 @@ class Logger:
             print(Logger.DEBUG + id_ + ' DEBUG: ' + msg + Logger.ENDC)
 
     @staticmethod
-    def info(msg='', id_=''):
-        if Logger.level <= logging.INFO:
+    def important(msg='', id_=''):
+        if Logger.level <= 25:
             print(Logger.INFO + id_ + ' INFO: ' + msg + Logger.ENDC)
 
     @staticmethod
-    def info2(msg='', id_=''):
+    def info(msg='', id_=''):
         if Logger.level <= logging.INFO:
             print(Logger.INFO2 + id_ + ' INFO: ' + msg + Logger.ENDC)
 

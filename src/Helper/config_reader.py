@@ -41,6 +41,8 @@ class ConfigReader:
             return logging.ERROR
         elif level == 'warning' or level == 'warn':
             return logging.WARNING
+        elif level == 'important':
+            return 25
         elif level == 'info':
             return logging.INFO
         else:

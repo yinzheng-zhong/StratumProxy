@@ -175,7 +175,7 @@ class StratumServer:
             if 'result' in json_obj.keys() and json_obj['result'] is False:
                 Logger.warning('Pool: ' + pool_data, id_=self.id_)
             else:
-                Logger.info2('Pool: ' + repr(pool_data), id_=self.id_)
+                Logger.info('Pool: ' + repr(pool_data), id_=self.id_)
 
             # redirect the data strait to the miner
             self.send_to_miner(pool_data)
@@ -222,7 +222,7 @@ class StratumServer:
             except queue.Empty:
                 continue
 
-            Logger.info('Miner: ' + miner_data, id_=self.id_)
+            Logger.important('Miner: ' + miner_data, id_=self.id_)
 
             # Here is for worker reg, choose the coin now.
             data_dic = json.loads(miner_data)
