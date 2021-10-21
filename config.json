@@ -32,7 +32,8 @@
         "NILU": "c=BTC,m=solo"
       },
       "pool_port": 9999,
-      "server_port": 3335
+      "server_port": 3335,
+      "bid": 0.00
     },
     "sha256": {
       "coins": {
@@ -48,7 +49,8 @@
         "FCH": "c=BTC,m=solo"
       },
       "pool_port": 3333,
-      "server_port": 3333
+      "server_port": 3333,
+      "bid": 0.0062
     }
   },
   "debug_level": "important",

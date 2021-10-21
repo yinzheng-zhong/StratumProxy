@@ -32,6 +32,9 @@ class ConfigReader:
     def refresh(self):
         self.data = self._read_file()
 
+    def get_bid(self):
+        return self.data_settings[self.algo]["bid"]
+
     def get_logging_level(self):
         level = self.data['debug_level']
 

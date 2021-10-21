@@ -27,7 +27,7 @@ if __name__ == '__main__':
     while True:
         _, profitability = api.get_most_profitable()
 
-        if profitability * 0.95 > 0.0062:
+        if profitability * 0.95 > setting.get_bid():
             is_profitable = True
             list_conns.append(StratumServer(algo, server, api).run())
         elif is_profitable:
