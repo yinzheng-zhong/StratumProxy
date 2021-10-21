@@ -1,5 +1,5 @@
 import sys
-from src.Proxy.server import StratumServer
+from src.Proxy.proxy import StratumServer
 from src.Helper.config_reader import ConfigReader
 import time
 import socket
@@ -23,7 +23,11 @@ if __name__ == '__main__':
         server.listen(5)
 
         while True:
-            list_conns.append(StratumServer(algo, server, api).run())
+            _, profitability = api.get_most_profitable()
+            if profitability * 0.95 > 0.0062:
+                list_conns.append(StratumServer(algo, server, api).run())
+            else:
+                Logger.warning('No profitable at the moment: ' + str(profitability))
 
             new_list = []
             for conn in list_conns:

@@ -9,11 +9,12 @@ class Api:
         self.coin_lists = coin_lists
         self.last_request = 0
         self.last_coin = ''
+        self.last_profitability = 0
 
     def get_most_profitable(self):
         try:
             if time.time() - self.last_request < 1:
-                return self.last_coin
+                return self.last_coin, self.last_profitability
 
             response = requests.get("http://api.zergpool.com:8080/api/currencies").json()
 
@@ -30,6 +31,7 @@ class Api:
 
             self.last_request = time.time()
             self.last_coin = coin_to_mine
+            self.last_profitability = max_profit
 
             return coin_to_mine, max_profit
         except Exception as e:
