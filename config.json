@@ -51,6 +51,6 @@
       "server_port": 3333
     }
   },
-  "debug_level": "info",
+  "debug_level": "important",
   "param": "c=BTC"
 }    
