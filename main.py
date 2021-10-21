@@ -16,37 +16,34 @@ if __name__ == '__main__':
 
     port = setting.get_server_port()
 
-    try:
-        server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        server.bind(("0.0.0.0", port))
-        server.listen(5)
 
-        is_profitable = True
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    server.bind(("0.0.0.0", port))
+    server.listen(5)
 
-        while True:
-            _, profitability = api.get_most_profitable()
+    is_profitable = True
 
-            if profitability * 0.95 > 0.0062:
-                is_profitable = True
-                list_conns.append(StratumServer(algo, server, api).run())
-            elif is_profitable:
-                Logger.warning('No profitable at the moment: ' + str(profitability))
-                is_profitable = False
+    while True:
+        _, profitability = api.get_most_profitable()
 
-            new_list = []
-            for conn in list_conns:
-                if conn.exit_signal:
-                    Logger.warning('Delete conn' + str(conn))
-                    del conn
-                else:
-                    new_list.append(conn)
+        if profitability * 0.95 > 0.0062:
+            is_profitable = True
+            list_conns.append(StratumServer(algo, server, api).run())
+        elif is_profitable:
+            Logger.warning('No profitable at the moment: ' + str(profitability))
+            is_profitable = False
 
-            list_conns = new_list[:]
-            gc.collect()
+        new_list = []
+        for conn in list_conns:
+            if conn.exit_signal:
+                Logger.warning('Delete conn' + str(conn))
+                del conn
+            else:
+                new_list.append(conn)
 
-            Logger.warning('list_conns' + str(len(list_conns)))
+        list_conns = new_list[:]
+        gc.collect()
 
-    except Exception as e:
-        print('Error at Main', e)
-        sys.exit()
+        Logger.warning('list_conns' + str(len(list_conns)))
+        time.sleep(0.1)
