@@ -3,8 +3,8 @@ from src.Helper.config_reader import ConfigReader
 
 
 class Logger:
-    logging.warning('')
     level = ConfigReader(None).get_logging_level()
+    last_message = ''
 
     HEADER = '\033[95m'
     DEBUG = '\033[94m'
@@ -20,30 +20,42 @@ class Logger:
 
     @staticmethod
     def warning(msg='', id_=''):
-        if Logger.level <= logging.WARNING:
-            print(Logger.WARNING + id_ + ' WARNING: ' + msg + Logger.ENDC)
+        m = Logger.WARNING + id_ + ' WARNING: ' + msg + Logger.ENDC
+        if Logger.level <= logging.WARNING and m != Logger.last_message:
+            print(m)
+            Logger.last_message = m
 
     @staticmethod
     def error(msg='', id_=''):
-        if Logger.level <= logging.ERROR:
-            print(Logger.ERROR + id_ + ' ERROR: ' + msg + Logger.ENDC)
+        m = Logger.ERROR + id_ + ' ERROR: ' + msg + Logger.ENDC
+        if Logger.level <= logging.ERROR and m != Logger.last_message:
+            print(m)
+            Logger.last_message = m
 
     @staticmethod
     def debug(msg='', id_=''):
-        if Logger.level <= logging.DEBUG:
-            print(Logger.DEBUG + id_ + ' DEBUG: ' + msg + Logger.ENDC)
+        m = Logger.DEBUG + id_ + ' DEBUG: ' + msg + Logger.ENDC
+        if Logger.level <= logging.DEBUG and m != Logger.last_message:
+            print(m)
+            Logger.last_message = m
 
     @staticmethod
     def important(msg='', id_=''):
-        if Logger.level <= 25:
-            print(Logger.INFO + id_ + ' INFO: ' + msg + Logger.ENDC)
+        m = Logger.INFO + id_ + ' INFO: ' + msg + Logger.ENDC
+        if Logger.level <= 25 and m != Logger.last_message:
+            print(m)
+            Logger.last_message = m
 
     @staticmethod
     def info(msg='', id_=''):
-        if Logger.level <= logging.INFO:
-            print(Logger.INFO2 + id_ + ' INFO: ' + msg + Logger.ENDC)
+        m = Logger.INFO2 + id_ + ' INFO: ' + msg + Logger.ENDC
+        if Logger.level <= logging.INFO and m != Logger.last_message:
+            print(m)
+            Logger.last_message = m
 
     @staticmethod
     def critical(msg='', id_=''):
-        if Logger.level <= logging.CRITICAL:
-            print(Logger.CRITICAL + id_ + ' CRITICAL: ' + msg + Logger.ENDC)
+        m = Logger.CRITICAL + id_ + ' CRITICAL: ' + msg + Logger.ENDC
+        if Logger.level <= logging.CRITICAL and m != Logger.last_message:
+            print(m)
+            Logger.last_message = m
