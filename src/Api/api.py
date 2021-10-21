@@ -28,12 +28,10 @@ class Api:
                             max_profit = current_estimate
                             coin_to_mine = i
 
-            if time.time() - self.last_request < 10:
-                Logger.important('Profitability: ' + str(max_profit))
             self.last_request = time.time()
             self.last_coin = coin_to_mine
 
-            return coin_to_mine
+            return coin_to_mine, max_profit
         except Exception as e:
             Logger.warning(str(e))
             return self.coin_lists[0]

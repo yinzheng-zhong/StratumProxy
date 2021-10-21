@@ -76,7 +76,7 @@ class StratumServer:
     def init_coin(self, data_dic):
         Logger.debug('Entered init_coin', id_=self.id_)
 
-        coin = self.api.get_most_profitable()
+        coin, profitability = self.api.get_most_profitable()
 
         req_params = data_dic['params']
         for i in range(len(req_params)):
@@ -85,17 +85,18 @@ class StratumServer:
                 Logger.debug('proxy keyword detected', id_=self.id_)
                 req_params[i] = self.setting.get_param(coin) + ',mc=' + coin
 
-        json_data = json.dumps(data_dic) + '\n'
+                json_data = json.dumps(data_dic) + '\n'
 
-        Logger.debug('init_coin() modified request to: ' + json_data, id_=self.id_)
+                Logger.debug('init_coin() modified request to: ' + json_data, id_=self.id_)
 
-        self.last_coin = coin
+                self.last_coin = coin
 
-        self.pool_sending_queue.put(json_data)
-        Logger.warning('\n' + '=' * 256, id_=self.id_)
-        Logger.warning('\nMiner start to mine $' + coin, id_=self.id_)
+                self.pool_sending_queue.put(json_data)
+                Logger.warning('\n' + '=' * 256, id_=self.id_)
+                Logger.warning('\nMiner start to mine $' + coin, id_=self.id_)
+                Logger.important('Current profitability: ' + str(profitability))
 
-        self.last_switching = time.time()
+                self.last_switching = time.time()
 
     def choose_coin(self):
         if time.time() - self.last_switching < 1:
@@ -104,10 +105,11 @@ class StratumServer:
         Logger.debug('Entered choose_coin', id_=self.id_)
         self.last_switching = time.time()
 
-        coin = self.api.get_most_profitable()
+        coin, profitability = self.api.get_most_profitable()
 
         if self.last_coin and coin != self.last_coin:
             Logger.warning('\nMiner Switching to $' + coin, id_=self.id_)
+            Logger.important('Current profitability: ' + str(profitability))
             self.exit_signal = True
 
             self.restart()
