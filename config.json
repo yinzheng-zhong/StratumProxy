@@ -37,7 +37,7 @@
     },
     "sha256": {
       "coins": {
-        "BCA": "c=BTC,m=solo",
+        "BCA": "c=BTC",
         "DGB": "c=BTC",
         "LCC": "c=BTC,m=solo",
         "XEC": "c=BTC",
