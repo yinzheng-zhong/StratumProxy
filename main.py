@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
         if profitability * 0.95 > setting.get_bid():
             is_profitable = True
-            Logger.warning('Profitable: ' + str(profitability))
+            Logger.important('Profitable: ' + str(profitability))
             list_conns.append(StratumServer(algo, server, api).run())
         elif is_profitable:
             Logger.warning('Not profitable at the moment: ' + str(profitability))

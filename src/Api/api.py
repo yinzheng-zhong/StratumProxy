@@ -18,14 +18,14 @@ class Api:
         self.webpage_url = "https://zergpool.com/site/mining?algo=" + algo
         self.driver = webdriver.Chrome('drivers/chromedriver')
 
-        self.last_coin = ''
-        self.last_profitability = 0
+        self._thre = threading.Thread(target=self.start_fetching)
+        self._thre.start()
 
-        self.thre = threading.Thread(target=self.start_fetching)
-        self.thre.start()
+        self._last_coin = ''
+        self._last_profitability = 0
 
     def get_most_profitable(self):
-        return self.last_coin, self.last_profitability
+        return self._last_coin, self._last_profitability
 
     def start_fetching(self):
         while True:
@@ -43,10 +43,8 @@ class Api:
                                 max_profit = current_estimate
                                 coin_to_mine = i
 
-                self.last_coin = coin_to_mine
-                self.last_profitability = max_profit
-
-                return coin_to_mine, max_profit
+                self._last_coin = coin_to_mine
+                self._last_profitability = max_profit
             except Exception as e:
                 print(e)
 
