@@ -46,6 +46,5 @@ if __name__ == '__main__':
         gc.collect()
 
         Logger.warning('Number of connections: ' + str(len(list_conns)))
-        for i in range(len(new_list)):
-            print('List #', i, '  ', new_list[i].exit_signal)
+
         time.sleep(0.1)

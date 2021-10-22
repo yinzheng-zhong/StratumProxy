@@ -129,6 +129,8 @@ class StratumServer:
 
             self.choose_coin()
 
+            self.server_conn
+
             time.sleep(0.1)
 
     def send_to_pool(self):
