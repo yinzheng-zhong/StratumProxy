@@ -18,7 +18,7 @@ class ConfigReader:
         return data
 
     def get_coins(self):
-        return self.data_settings[self.algo]['coins'].keys()
+        return list(self.data_settings[self.algo]['coins'].keys())
 
     def get_pool_port(self):
         return self.data_settings[self.algo]['pool_port']

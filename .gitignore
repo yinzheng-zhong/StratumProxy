@@ -1,2 +1,6 @@
 /venv/
 /.idea/
+/main.spec
+/build/
+/dist/
+/main-py3.8

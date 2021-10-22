@@ -28,9 +28,10 @@ if __name__ == '__main__':
 
         if profitability * 0.95 > setting.get_bid():
             is_profitable = True
+            Logger.warning('Profitable: ' + str(profitability))
             list_conns.append(StratumServer(algo, server, api).run())
         elif is_profitable:
-            Logger.warning('No profitable at the moment: ' + str(profitability))
+            Logger.warning('Not profitable at the moment: ' + str(profitability))
             is_profitable = False
 
         new_list = []
