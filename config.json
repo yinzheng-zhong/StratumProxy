@@ -53,6 +53,6 @@
       "bid": 0.0062
     }
   },
-  "debug_level": "important",
+  "debug_level": "info",
   "param": "c=BTC"
 }    

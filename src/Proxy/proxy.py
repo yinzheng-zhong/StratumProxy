@@ -148,8 +148,7 @@ class StratumServer:
                 self.client.send(enc_data)
             except OSError as e:
                 Logger.error(str(e) + 'OSError in proxy.py send_to_pool()', id_=self.id_)
-                self.client = Client(self.algo)
-                self.client.send(enc_data)
+                self.restart()
 
     def receive_from_pool(self):
         while True:
