@@ -26,11 +26,11 @@ if __name__ == '__main__':
     while True:
         _, profitability = api.get_most_profitable()
 
-        if profitability * 0.95 > setting.get_bid():
+        if profitability * 0.94 > setting.get_bid():
             is_profitable = True
             Logger.important('Profitable: ' + str(profitability))
             list_conns.append(StratumServer(algo, server, api).run())
-        elif is_profitable:
+        else:
             Logger.warning('Not profitable at the moment: ' + str(profitability))
             is_profitable = False
 
@@ -45,5 +45,5 @@ if __name__ == '__main__':
         list_conns = new_list[:]
         gc.collect()
 
-        Logger.warning('Number of connections: ' + str(len(list_conns)))
+        Logger.warning('Number of connections: ' + str(list_conns))
         time.sleep(0.1)
