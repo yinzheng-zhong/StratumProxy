@@ -93,7 +93,7 @@ class Api:
     def init_driver(self):
         try:
             self.driver = webdriver.Chrome('drivers/chromedriver')
-        finally:
+        except Exception as e:
             options = Options()
             options.headless = True
             self.driver = webdriver.Chrome('drivers/chromedriver', options=options)
