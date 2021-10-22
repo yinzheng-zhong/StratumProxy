@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
 import html_to_json
 import numpy as np
 import threading
@@ -16,7 +17,10 @@ class Api:
         self.coin_lists = coin_lists
 
         self.webpage_url = "https://zergpool.com/site/mining?algo=" + algo
-        self.driver = webdriver.Chrome('drivers/chromedriver')
+
+        self.driver = None
+
+        self.init_driver()
 
         self._thre = threading.Thread(target=self.start_fetching)
         self._thre.start()
@@ -85,3 +89,12 @@ class Api:
             print(e)
             response = requests.get("http://api.zergpool.com:8080/api/currencies").json()
             return response
+
+    def init_driver(self):
+        try:
+            self.driver = webdriver.Chrome('drivers/chromedriver')
+        finally:
+            options = Options()
+            options.headless = True
+            self.driver = webdriver.Chrome('drivers/chromedriver', options=options)
+            Logger.warning('Switch to headless driver')
