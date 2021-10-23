@@ -3,7 +3,7 @@
     "scrypt": {
       "coins": {
         "DGB": "c=BTC",
-        "NAH": "c=BTC,m=solo",
+        "NAH": "c=BTC",
         "FLO": "c=BTC,m=solo",
         "XSH": "c=BTC,m=solo",
         "LTC": "c=BTC",
