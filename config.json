@@ -8,13 +8,14 @@
         "XSH": "c=BTC,m=solo",
         "LTC": "c=BTC",
         "PYRK": "c=BTC,m=solo",
-        "GLC": "c=BTC,m=solo",
-        "EMC2": "c=BTC,m=solo",
+        "GLC": "c=BTC",
+        "EMC2": "c=BTC",
         "GCN": "c=BTC,m=solo",
-        "NSD": "c=BTC,m=solo",
+        "NSD": "c=BTC",
         "CHEESE": "c=BTC,m=solo",
         "XVG": "c=BTC",
-        "LCP": "c=BTC,m=solo"
+        "LCP": "c=BTC,m=solo",
+        "IBH": "c=BTC"
       },
       "pool_port": 3433,
       "server_port": 3334,
