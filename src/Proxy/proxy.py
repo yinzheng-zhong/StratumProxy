@@ -1,8 +1,6 @@
 import socket
 import sys
 
-import backup as backup
-
 from src.Proxy.client import Client
 from src.Api.api import Api
 import time
