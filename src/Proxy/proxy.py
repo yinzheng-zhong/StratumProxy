@@ -229,12 +229,12 @@ class Proxy:
             else:
                 Logger.info('Pool: ' + repr(pool_data), id_=self.id_)
 
-            if self.backup:
-                if 'mining.notify' in pool_data:
-                    if 'result' in json_obj.keys() and json_obj['result'][2] <= 3:
-                        json_obj['result'][2] = 4  # change difficulty to 4
+            #if self.backup:
+            #    if 'mining.notify' in pool_data:
+            #        if 'result' in json_obj.keys() and json_obj['result'][2] <= 3:
+            #            json_obj['result'][2] = 4  # change difficulty to 4
 
-                        pool_data = json.dumps(json_obj)
+            #            pool_data = json.dumps(json_obj)
 
                 #if 'mining.set_difficulty' in pool_data:
                 #    if json_obj['params'][0] < 500000:
