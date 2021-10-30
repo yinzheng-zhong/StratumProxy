@@ -44,6 +44,7 @@ class Api:
                     for j in response.keys():
                         if i in j and response[j]['algo'] == self.algo:
                             current_estimate = float(response[j]['estimate_current'])
+                            Logger.important('Current estimate: ' + str(current_estimate))
                             if current_estimate > max_profit:
                                 max_profit = current_estimate
                                 coin_to_mine = i
