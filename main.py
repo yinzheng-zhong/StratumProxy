@@ -71,8 +71,6 @@ class Server:
         for proxy in self.list_conns_zerg:
             if not proxy.exit_signal:
                 tmp.append(proxy)
-            else:
-                del proxy
 
         self.list_conns_zerg = tmp
 
@@ -88,8 +86,6 @@ class Server:
         for proxy in self.list_conns_backup:
             if not proxy.exit_signal:
                 tmp.append(proxy)
-            else:
-                del proxy
 
         self.list_conns_backup = tmp
 
