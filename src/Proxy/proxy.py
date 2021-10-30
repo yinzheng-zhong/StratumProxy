@@ -108,7 +108,9 @@ class Proxy:
         thread_pool_processor.join()
         thread_miner_receiver.join()
         thread_miner_processor.join()
+        thread_miner_sender.join()
         thread_pool_sender.join()
+
         #thread_periodic_calls.join()
 
         return# self
