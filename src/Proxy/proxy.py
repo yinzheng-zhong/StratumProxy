@@ -179,9 +179,17 @@ class Proxy:
 
         Logger.warning('Server restart', id_=self.id_)
         time.sleep(5)
-        self.server_conn.close()
+        try:
+            self.server_conn.close()
+        except AttributeError as e:
+            Logger.error(str(e), id_=self.id_)
+
         self.server = None
-        self.client.server.close()
+
+        try:
+            self.client.server.close()
+        except AttributeError as e:
+            Logger.error(str(e), id_=self.id_)
         # raise Exception('Server restart')
 
     def periodic_calls(self):
