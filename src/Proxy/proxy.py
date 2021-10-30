@@ -74,6 +74,7 @@ class Proxy:
         thread_pool_processor = threading.Thread(target=self.process_from_pool)
         thread_miner_receiver = threading.Thread(target=self.receive_from_miner)
         thread_miner_processor = threading.Thread(target=self.process_from_miner)
+        thread_miner_sender = threading.Thread(target=self.send_to_miner)
         thread_pool_sender = threading.Thread(target=self.send_to_pool)
 
         self.server_conn, addr = self.server.accept()
@@ -93,6 +94,9 @@ class Proxy:
 
         thread_pool_receiver.start()
         Logger.debug('thread_pool_receiver started', id_=self.id_)
+
+        thread_miner_sender.start()
+        Logger.debug('thread_miner_sender started', id_=self.id_)
 
         thread_miner_receiver.start()
         Logger.debug('thread_mine_receiver started', id_=self.id_)
@@ -229,12 +233,12 @@ class Proxy:
             else:
                 Logger.info('Pool: ' + repr(pool_data), id_=self.id_)
 
-            #if self.backup:
-            #    if 'mining.notify' in pool_data:
-            #        if 'result' in json_obj.keys() and json_obj['result'][2] <= 3:
-            #            json_obj['result'][2] = 4  # change difficulty to 4
+            if self.backup:
+                if 'mining.notify' in pool_data:
+                    if 'result' in json_obj.keys() and json_obj['result'][2] <= 3:
+                        json_obj['result'][2] = 4  # change difficulty to 4
 
-            #            pool_data = json.dumps(json_obj)
+                        pool_data = json.dumps(json_obj)
 
                 #if 'mining.set_difficulty' in pool_data:
                 #    if json_obj['params'][0] < 500000:
