@@ -70,7 +70,7 @@ class Server:
     def destroy_zerg(self):
         for proxy in self.list_conns_zerg:
             try:
-                proxy.close(hard=True)
+                proxy.close()
             except AttributeError:
                 continue
 
@@ -87,7 +87,7 @@ class Server:
     def destroy_backup(self):
         for proxy in self.list_conns_backup:
             try:
-                proxy.close(hard=True)
+                proxy.close()
             except AttributeError:
                 continue
 

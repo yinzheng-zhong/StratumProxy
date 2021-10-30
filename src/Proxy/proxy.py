@@ -172,6 +172,7 @@ class Proxy:
         if not hard:
             self.miner_sending_queue.put('{"id":0,"method":"client.reconnect","params":[]}\n')
 
+        time.sleep(2)
         self.exit_signal = True
         Logger.warning('Server restart', id_=self.id_)
         self.server_conn.close()
