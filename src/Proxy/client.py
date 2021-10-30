@@ -18,7 +18,7 @@ class Client:
     def _connect(self):
         settings = ConfigReader(self.algo)
         if self.backup:
-            host = Utils.zerg_to_nice_algo_converter(self.algo) + '.eu-west.nicehash.com'
+            host = settings.get_pool_backup_url()
             port = settings.get_pool_port_backup()
         else:
             host = self.algo + '.eu.mine.zergpool.com'  # The server's hostname or IP address

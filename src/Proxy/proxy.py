@@ -215,11 +215,25 @@ class Proxy:
             except queue.Empty:
                 continue
 
+            if 'mining.notify' in pool_data:
+                print()
+
             json_obj = json.loads(pool_data)
             if 'result' in json_obj.keys() and json_obj['result'] is False:
                 Logger.warning('Pool: ' + pool_data, id_=self.id_)
             else:
                 Logger.info('Pool: ' + repr(pool_data), id_=self.id_)
+
+            if self.backup:
+                if 'mining.notify' in pool_data:
+                    if 'result' in json_obj.keys() and json_obj['result'][2] <= 3:
+                        json_obj['result'][2] = 4  # change difficulty to 4
+
+                        pool_data = json.dumps(json_obj)
+
+                if 'mining.set_difficulty' in pool_data:
+                    if json_obj['params'][0] < 500000:
+                        json_obj['params'][0] = 500000
 
             # redirect the data strait to the miner
             self.send_to_miner(pool_data)
@@ -268,23 +282,15 @@ class Proxy:
 
             Logger.important('Miner: ' + miner_data, id_=self.id_)
 
-            ''' Change the proxy with pass'''
+            ''' Change the proxy user pass'''
             miner_data = miner_data.replace('proxy', self.mining_params)
             miner_data = miner_data.replace(Proxy.USER, self.user_name)
-            self.pool_sending_queue.put(miner_data)
+
+            ''' Change Nicehash miner to cgminer '''
+            miner_data = miner_data.replace('NiceHash', 'cgminer')
 
             Logger.debug('Miner Modified ' + miner_data)
-
-            """
-            # Here is for worker reg, choose the coin now.
-            data_dic = json.loads(miner_data)
-
-            if data_dic['method'] == 'mining.authorize' or data_dic['method'] == 'eth_submitLogin':
-                Logger.debug('Mining authorize detected', id_=self.id_)
-                self.init_coin(data_dic)
-            else:  # decode and put into queue
-                self.pool_sending_queue.put(miner_data)
-            """
+            self.pool_sending_queue.put(miner_data)
 
     def send_to_miner(self, pool_data):
         """

@@ -23,6 +23,9 @@ class ConfigReader:
     def get_pool_port(self):
         return self.data_settings[self.algo]['pool_port']
 
+    def get_pool_backup_url(self):
+        return self.data_settings[self.algo]['pool_backup_url']
+
     def get_pool_port_backup(self):
         return self.data_settings[self.algo]['pool_port_backup']
 
