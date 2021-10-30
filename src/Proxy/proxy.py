@@ -249,6 +249,7 @@ class Proxy:
             # if reconnect, send it then close sometime after
             if 'client.reconnect' in pool_data:
                 self.close()
+                return
 
             # redirect the data strait to the miner
             self.miner_sending_queue.put(pool_data)
