@@ -35,6 +35,7 @@ class Proxy:
         self.create_user_name()
 
         self.miner_receive_queue = queue.Queue()
+        self.miner_sending_queue = queue.Queue()
         self.pool_sending_queue = queue.Queue()
 
         self.server = server
@@ -152,7 +153,11 @@ class Proxy:
             self.close()
     """
 
-    def close(self):
+    def close(self, hard=False):
+        if not hard:
+            self.miner_sending_queue.put('{"id":0,"method":"client.reconnect","params":[]}\n')
+
+        time.sleep(5)
         self.exit_signal = True
         Logger.warning('Server restart', id_=self.id_)
         self.server_conn.close()
@@ -235,11 +240,12 @@ class Proxy:
                 #    if json_obj['params'][0] < 500000:
                 #        json_obj['params'][0] = 500000
 
+            # if reconnect, send it then close sometime after
             if 'client.reconnect' in pool_data:
                 self.close()
 
             # redirect the data strait to the miner
-            self.send_to_miner(pool_data)
+            self.miner_sending_queue.put(pool_data)
 
     def receive_from_miner(self):
         while True:
@@ -295,15 +301,28 @@ class Proxy:
             Logger.debug('Miner Modified ' + miner_data)
             self.pool_sending_queue.put(miner_data)
 
-    def send_to_miner(self, pool_data):
+    def send_to_miner(self):
         """
         no sending queue, send straight to miner
         :param pool_data:
         :return:
         """
 
-        try:
-            self.server_conn.sendall(pool_data.encode('utf-8'))
-        except OSError:
-            self.close()
+        while True:
+            if self.exit_signal:
+                Logger.debug('send_to_miner exit_signal', id_=self.id_)
+                return
+
+            try:
+                sending_data = self.miner_sending_queue.get(block=True, timeout=Proxy.BLOCK_TIME)
+            except queue.Empty as e:
+                continue
+
+            enc_data = sending_data.encode('utf-8')
+
+            try:
+                self.server_conn.sendall(enc_data)
+            except OSError as e:
+                Logger.error(str(e) + 'OSError in proxy.py send_to_miner()', id_=self.id_)
+                self.close(hard=True)
 
