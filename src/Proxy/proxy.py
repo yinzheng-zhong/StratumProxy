@@ -231,9 +231,12 @@ class Proxy:
 
                         pool_data = json.dumps(json_obj)
 
-                if 'mining.set_difficulty' in pool_data:
-                    if json_obj['params'][0] < 500000:
-                        json_obj['params'][0] = 500000
+                #if 'mining.set_difficulty' in pool_data:
+                #    if json_obj['params'][0] < 500000:
+                #        json_obj['params'][0] = 500000
+
+            if 'client.reconnect' in pool_data:
+                self.close()
 
             # redirect the data strait to the miner
             self.send_to_miner(pool_data)
