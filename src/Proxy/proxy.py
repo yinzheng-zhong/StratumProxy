@@ -70,16 +70,16 @@ class Proxy:
         return self
 
     def run(self):
+        self.server_conn, addr = self.server.accept()
+        self.client = Client(self.algo, self.backup)
+        Logger.warning('New conn from ' + str(addr) + ' ' + str(self.backup), id_=self.id_)
+
         thread_pool_receiver = threading.Thread(target=self.receive_from_pool)
         thread_pool_processor = threading.Thread(target=self.process_from_pool)
         thread_miner_receiver = threading.Thread(target=self.receive_from_miner)
         thread_miner_processor = threading.Thread(target=self.process_from_miner)
         thread_miner_sender = threading.Thread(target=self.send_to_miner)
         thread_pool_sender = threading.Thread(target=self.send_to_pool)
-
-        self.server_conn, addr = self.server.accept()
-        self.client = Client(self.algo, self.backup)
-        Logger.warning('New conn from ' + str(addr) + ' ' + str(self.backup), id_=self.id_)
 
         #thread_periodic_calls = threading.Thread(target=self.periodic_calls)
 
@@ -192,7 +192,7 @@ class Proxy:
 
             try:
                 sending_data = self.pool_sending_queue.get(block=True, timeout=Proxy.BLOCK_TIME)
-            except queue.Empty as e:
+            except queue.Empty:
                 continue
 
             enc_data = sending_data.encode('utf-8')
