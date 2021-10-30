@@ -326,7 +326,7 @@ class Proxy:
         """
 
         while True:
-            if self.exit_signal:
+            if self.exit_signal and self.miner_sending_queue.empty():
                 Logger.debug('send_to_miner exit_signal', id_=self.id_)
                 return
 
