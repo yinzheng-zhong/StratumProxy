@@ -15,7 +15,8 @@
         "CHEESE": "m=solo",
         "XVG": "",
         "LCP": "m=solo",
-        "IBH": ""
+        "IBH": "",
+        "GSR": "m=solo"
       },
       "pool_port": 3433,
       "pool_port_backup": 3333,
