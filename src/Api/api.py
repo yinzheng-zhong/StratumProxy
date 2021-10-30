@@ -6,20 +6,21 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from src.Helper.config_reader import ConfigReader
 import html_to_json
 import numpy as np
 import threading
 
 
 class Api:
-    def __init__(self, algo, coin_lists):
+    def __init__(self, algo):
         self.algo = algo
-        self.coin_lists = coin_lists
+        self.setting = ConfigReader(algo)
+        self.coin_lists = self.setting.get_coins()
 
         self.webpage_url = "https://zergpool.com/site/mining?algo=" + algo
 
         self.driver = None
-
         self.init_driver()
 
         self._thre = threading.Thread(target=self.start_fetching)
@@ -59,10 +60,9 @@ class Api:
             Logger.info('Fetching profitability from zergpool')
 
             response = {}
+            self.driver.refresh()
 
-            self.driver.get(self.webpage_url)
-
-            element = WebDriverWait(self.driver, 5).until(
+            element = WebDriverWait(self.driver, 15).until(
                 ec.presence_of_element_located((By.ID, "maintable3"))
             )
 
@@ -81,20 +81,25 @@ class Api:
 
                 if coin_name and profitability:
                     # make a dict just like the normal request get from the API
-                    response[coin_name] = {'algo': self.algo, 'estimate_current': float(profitability) / 1000}
+                    response[coin_name] = {
+                        'algo': self.algo,
+                        'estimate_current': float(profitability) / self.setting.get_conversation()
+                    }
 
             return response
         except Exception as e:
             Logger.warning('Back to API request')
-            print(e)
+            Logger.debug(str(e))
             response = requests.get("http://api.zergpool.com:8080/api/currencies").json()
             return response
 
     def init_driver(self):
-        try:
-            self.driver = webdriver.Chrome('drivers/chromedriver')
-        except Exception as e:
-            options = Options()
-            options.headless = True
-            self.driver = webdriver.Chrome('drivers/chromedriver', options=options)
-            Logger.warning('Switch to headless driver')
+        #try:
+        #    self.driver = webdriver.Chrome('drivers/chromedriver')
+        #except Exception as e:
+        options = Options()
+        options.headless = True
+        self.driver = webdriver.Chrome('drivers/chromedriver', options=options)
+        Logger.warning('Switch to headless driver')
+
+        self.driver.get(self.webpage_url)

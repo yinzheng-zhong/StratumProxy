@@ -1,6 +1,8 @@
 import socket
 import sys
 
+import backup as backup
+
 from src.Proxy.client import Client
 from src.Api.api import Api
 import time
@@ -13,18 +15,29 @@ import threading
 import select
 
 
-class StratumServer:
-    def __init__(self, algo, server, coin_profit_api):
+class Proxy:
+    BLOCK_TIME = 0.1
+    USER = 'zxhaxdr'
+
+    def __init__(self, algo, server, coin_profit_api, backup=False):
         self.algo = algo
         self.setting = ConfigReader(algo)
-        self.last_switching = np.inf
-        self.last_coin = ''
+        self.client = None
+        self.api = coin_profit_api
+        self.backup = backup
+        #self.last_switching = np.inf
+        #self.last_coin = ''
+
+        self.wallet = self.setting.get_wallet_address()
+
+        self.mining_params = None
+        self.create_mining_params()
+
+        self.user_name = None
+        self.create_user_name()
 
         self.miner_receive_queue = queue.Queue()
         self.pool_sending_queue = queue.Queue()
-
-        self.api = coin_profit_api
-        self.client = Client(algo)
 
         self.server = server
         self.server_conn = None
@@ -32,28 +45,46 @@ class StratumServer:
 
         self.id_ = str(self).split('0x')[-1]
 
+    def create_mining_params(self):
+        payout_coin = self.setting.get_payout()
+        mining_coin, _ = self.api.get_most_profitable()
+        mining_mode = self.setting.get_param(mining_coin)
+
+        if self.backup:
+            self.mining_params = 'x'
+        else:
+            if mining_mode:
+                self.mining_params = 'c=' + payout_coin + ',' + 'm=' + mining_mode + ',' + 'mc=' + mining_coin
+            else:
+                self.mining_params = 'c=' + payout_coin + ',' + 'mc=' + mining_coin
+
+    def create_user_name(self):
+        if self.backup:
+            self.user_name = self.wallet + '.prox'
+        else:
+            self.user_name = self.wallet
+
+    def start(self):
+        proxy_thread = threading.Thread(target=self.run)
+        proxy_thread.start()
+
+        return self
+
     def run(self):
-        self.server_conn, addr = self.server.accept()
-        Logger.warning('New conn from ' + str(addr), id_=self.id_)
-
-        self.exit_signal = False
-
         thread_pool_receiver = threading.Thread(target=self.receive_from_pool)
         thread_pool_processor = threading.Thread(target=self.process_from_pool)
         thread_miner_receiver = threading.Thread(target=self.receive_from_miner)
         thread_miner_processor = threading.Thread(target=self.process_from_miner)
         thread_pool_sender = threading.Thread(target=self.send_to_pool)
 
-        thread_periodic_calls = threading.Thread(target=self.periodic_calls)
+        self.server_conn, addr = self.server.accept()
+        self.client = Client(self.algo, self.backup)
+        Logger.warning('New conn from ' + str(addr), id_=self.id_)
 
-        thread_pool_receiver.start()
-        Logger.debug('thread_pool_receiver started', id_=self.id_)
+        #thread_periodic_calls = threading.Thread(target=self.periodic_calls)
 
         thread_pool_processor.start()
         Logger.debug('thread_pool_processor started', id_=self.id_)
-
-        thread_miner_receiver.start()
-        Logger.debug('thread_mine_receiver started', id_=self.id_)
 
         thread_miner_processor.start()
         Logger.debug('thread_miner_processor started', id_=self.id_)
@@ -61,18 +92,25 @@ class StratumServer:
         thread_pool_sender.start()
         Logger.debug('thread_pool_sender started', id_=self.id_)
 
-        thread_periodic_calls.start()
-        Logger.debug('thread_periodic_calls started', id_=self.id_)
+        thread_pool_receiver.start()
+        Logger.debug('thread_pool_receiver started', id_=self.id_)
 
-        return self
+        thread_miner_receiver.start()
+        Logger.debug('thread_mine_receiver started', id_=self.id_)
 
-        #thread_pool_receiver.join()
-        #thread_pool_processor.join()
-        #thread_miner_receiver.join()
-        #thread_miner_processor.join()
-        #thread_pool_sender.join()
+        #thread_periodic_calls.start()
+        #Logger.debug('thread_periodic_calls started', id_=self.id_)
+
+        thread_pool_receiver.join()
+        thread_pool_processor.join()
+        thread_miner_receiver.join()
+        thread_miner_processor.join()
+        thread_pool_sender.join()
         #thread_periodic_calls.join()
 
+        return# self
+
+    """
     def init_coin(self, data_dic):
         Logger.debug('Entered init_coin', id_=self.id_)
 
@@ -96,8 +134,9 @@ class StratumServer:
                 Logger.warning('\nMiner start to mine $' + coin, id_=self.id_)
                 Logger.important('Current profitability: ' + str(profitability))
 
-                self.last_switching = time.time()
-
+                #self.last_switching = time.time()
+                
+                
     def choose_coin(self):
         if time.time() - self.last_switching < 1:
             return
@@ -112,14 +151,14 @@ class StratumServer:
             Logger.important('Current profitability: ' + str(profitability))
             self.exit_signal = True
 
-            self.restart()
+            self.close()
+    """
 
-    def restart(self):
+    def close(self):
         self.exit_signal = True
         Logger.warning('Server restart', id_=self.id_)
         self.server_conn.close()
         self.client.server.close()
-        time.sleep(0.15)
         # raise Exception('Server restart')
 
     def periodic_calls(self):
@@ -132,7 +171,7 @@ class StratumServer:
 
             self.server_conn
 
-            time.sleep(0.1)
+            time.sleep(Proxy.BLOCK_TIME)
 
     def send_to_pool(self):
         while True:
@@ -140,8 +179,11 @@ class StratumServer:
                 Logger.debug('send_to_pool exit_signal', id_=self.id_)
                 return
 
+            if not self.client:
+                continue
+
             try:
-                sending_data = self.pool_sending_queue.get(block=True, timeout=0.1)
+                sending_data = self.pool_sending_queue.get(block=True, timeout=Proxy.BLOCK_TIME)
             except queue.Empty as e:
                 continue
 
@@ -151,7 +193,7 @@ class StratumServer:
                 self.client.send(enc_data)
             except OSError as e:
                 Logger.error(str(e) + 'OSError in proxy.py send_to_pool()', id_=self.id_)
-                self.restart()
+                self.close()
 
     def receive_from_pool(self):
         while True:
@@ -171,7 +213,7 @@ class StratumServer:
                 return
 
             try:
-                pool_data = self.client.pool_receive_queue.get(block=True, timeout=0.1)
+                pool_data = self.client.pool_receive_queue.get(block=True, timeout=Proxy.BLOCK_TIME)
             except queue.Empty:
                 continue
 
@@ -190,23 +232,23 @@ class StratumServer:
                 Logger.debug('receive_from_miner exit_signal', id_=self.id_)
                 return
 
-            ready = select.select([self.server_conn], [], [], 0.1)  # this bit basically block for a second
+            ready = select.select([self.server_conn], [], [], Proxy.BLOCK_TIME)  # this bit basically block for a second
             if ready[0]:
                 try:
                     data = self.server_conn.recv(8000)
                 except ConnectionAbortedError:
                     Logger.warning('ConnectionAbortedError', id_=self.id_)
-                    self.restart()
+                    self.close()
                     return
                 except OSError:
                     Logger.warning('Socket might already closed', id_=self.id_)
-                    self.restart()
+                    self.close()
                     return
 
                 try:
                     dec_data = data.decode("utf-8")
                 except AttributeError:
-                    self.restart()
+                    self.close()
                     return
 
                 received = dec_data.split('\n')
@@ -222,12 +264,20 @@ class StratumServer:
                 return
 
             try:
-                miner_data = self.miner_receive_queue.get(block=True, timeout=0.1)
+                miner_data = self.miner_receive_queue.get(block=True, timeout=Proxy.BLOCK_TIME)
             except queue.Empty:
                 continue
 
             Logger.important('Miner: ' + miner_data, id_=self.id_)
 
+            ''' Change the proxy with pass'''
+            miner_data = miner_data.replace('proxy', self.mining_params)
+            miner_data = miner_data.replace(Proxy.USER, self.user_name)
+            self.pool_sending_queue.put(miner_data)
+
+            Logger.debug('Miner Modified ' + miner_data)
+
+            """
             # Here is for worker reg, choose the coin now.
             data_dic = json.loads(miner_data)
 
@@ -236,6 +286,7 @@ class StratumServer:
                 self.init_coin(data_dic)
             else:  # decode and put into queue
                 self.pool_sending_queue.put(miner_data)
+            """
 
     def send_to_miner(self, pool_data):
         """
@@ -247,5 +298,5 @@ class StratumServer:
         try:
             self.server_conn.sendall(pool_data.encode('utf-8'))
         except OSError:
-            self.restart()
+            self.close()
 

@@ -2,59 +2,65 @@
   "setting": {
     "scrypt": {
       "coins": {
-        "DGB": "c=BTC",
-        "NAH": "c=BTC",
-        "FLO": "c=BTC,m=solo",
-        "XSH": "c=BTC,m=solo",
-        "LTC": "c=BTC",
-        "PYRK": "c=BTC,m=solo",
-        "GLC": "c=BTC",
-        "EMC2": "c=BTC",
-        "GCN": "c=BTC,m=solo",
-        "NSD": "c=BTC",
-        "CHEESE": "c=BTC,m=solo",
-        "XVG": "c=BTC",
-        "LCP": "c=BTC,m=solo",
-        "IBH": "c=BTC"
+        "DGB": "",
+        "NAH": "",
+        "FLO": "m=solo",
+        "XSH": "m=solo",
+        "LTC": "",
+        "PYRK": "m=solo",
+        "GLC": "",
+        "EMC2": "",
+        "GCN": "m=solo",
+        "NSD": "",
+        "CHEESE": "m=solo",
+        "XVG": "",
+        "LCP": "m=solo",
+        "IBH": ""
       },
       "pool_port": 3433,
+      "pool_port_backup": 3333,
       "server_port": 3334,
-      "bid": 0.00
+      "bid": 0.23,
+      "hash_conversion": 1
     },
     "ethash": {
       "coins": {
-        "ETH": "c=BTC",
-        "NUKO": "c=BTC,m=solo",
-        "TSF": "c=BTC",
-        "CLO": "c=BTC",
-        "EXP": "c=BTC,m=solo",
-        "ATH": "c=BTC,m=solo",
-        "EGEM": "c=BTC,m=solo",
-        "PRKL": "c=BTC,m=solo",
-        "NILU": "c=BTC,m=solo"
+        "ETH": "",
+        "NUKO": "m=solo",
+        "TSF": "",
+        "CLO": "",
+        "EXP": "m=solo",
+        "ATH": "m=solo",
+        "EGEM": "m=solo",
+        "PRKL": "m=solo",
+        "NILU": "m=solo"
       },
       "pool_port": 9999,
+      "pool_port_backup": 3353,
       "server_port": 3335,
-      "bid": 0.00
+      "bid": 1.32,
+      "hash_conversion": 1
     },
     "sha256": {
       "coins": {
-        "BCA": "c=BTC",
-        "DGB": "c=BTC",
-        "LCC": "c=BTC,m=solo",
-        "XEC": "c=BTC",
-        "SHND": "c=BTC,m=solo",
-        "DVT": "c=BTC,m=solo",
-        "PYRK": "c=BTC,m=solo",
-        "BVG": "c=BTC,m=solo",
-        "CHTA": "c=BTC,m=solo",
-        "FCH": "c=BTC,m=solo"
+        "BCA": "",
+        "DGB": "",
+        "LCC": "m=solo",
+        "XEC": "",
+        "SHND": "m=solo",
+        "DVT": "m=solo",
+        "PYRK": "m=solo",
+        "BVG": "m=solo",
+        "CHTA": "m=solo",
+        "FCH": "m=solo"
       },
       "pool_port": 3333,
       "server_port": 3333,
-      "bid": 0.0062
+      "bid": 0.0062,
+      "hash_conversion": 1000
     }
   },
   "debug_level": "info",
-  "param": "c=BTC"
+  "payout_coin": "BTC",
+  "wallet": "3ML7Y3pHBZdDg2H9KTTc1zwRsADpUZn8tH"
 }    

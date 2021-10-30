@@ -1,25 +1,31 @@
 import socket
 import select
 import logging
+from src.Model.logger import Logger
 
 from src.Helper.config_reader import ConfigReader
 import queue
 
 
 class Client:
-    def __init__(self, algo):
+    def __init__(self, algo, backup):
         self.algo = algo
+        self.backup = backup
         self.pool_receive_queue = queue.Queue()
         self.server = self._connect()
 
     def _connect(self):
         settings = ConfigReader(self.algo)
-        host = self.algo + '.eu.mine.zergpool.com'  # The server's hostname or IP address
-        port = settings.get_pool_port()  # The port used by the server
+        if self.backup:
+            host = 'daggerhashimoto' + '.eu-west.nicehash.com'
+            port = settings.get_pool_port_backup()
+        else:
+            host = self.algo + '.eu.mine.zergpool.com'  # The server's hostname or IP address
+            port = settings.get_pool_port()  # The port used by the server
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect((host, port))
-        #s.setblocking(False)
+        s.setblocking(False)
 
         return s
 
@@ -31,7 +37,7 @@ class Client:
         self.server.sendall(msg)
 
     def receive(self):
-        ready = select.select([self.server], [], [], 0.1)
+        ready = select.select([self.server], [], [], 1000)
 
         if ready[0]:
             data = self.server.recv(8000)
@@ -41,4 +47,5 @@ class Client:
 
             for rec in received:
                 if rec:
+                    Logger.debug('Received from pool: ' + str(data) + '\n')
                     self.pool_receive_queue.put(rec + '\n')

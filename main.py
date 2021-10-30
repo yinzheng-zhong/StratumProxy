@@ -1,50 +1,102 @@
 import sys
-from src.Proxy.proxy import StratumServer
+from src.Proxy.proxy import Proxy
 from src.Helper.config_reader import ConfigReader
 import time
 import socket
 from src.Model.logger import Logger
 from src.Api.api import Api
+import threading
 import gc
 
-if __name__ == '__main__':
-    algo = sys.argv[1]
 
-    list_conns = []
-    setting = ConfigReader(algo)
-    api = Api(algo, setting.get_coins())
+class Server:
+    INSTANCES = 20
 
-    port = setting.get_server_port()
+    def __init__(self, algo):
+        self.algo = algo
+        self.setting = ConfigReader(algo)
+        self.api = Api(algo)
 
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    server.bind(("0.0.0.0", port))
-    server.listen(5)
+        self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.server.bind(("0.0.0.0", self.setting.get_server_port()))
+        self.server.listen(Server.INSTANCES)
 
-    profitable = False
+        self.prev_profitable = 0  # 0: init, 1 profitable, 2: not profitable
 
-    while True:
-        _, profitability = api.get_most_profitable()
+        self.list_conns_zerg = []
+        self.list_conns_backup = []
 
-        if profitability * 0.945 > setting.get_bid():
-            profitable = True
-            Logger.important('Profitable: ' + str(profitability))
-            list_conns.append(StratumServer(algo, server, api).run())
-        elif profitable:
-            Logger.warning('Not profitable at the moment: ' + str(profitability))
-            profitable = False
+    def run(self):
+        while True:
+            _, profitability = self.api.get_most_profitable()
 
-        new_list = []
-        for conn in list_conns:
-            if conn.exit_signal:
-                Logger.warning('Delete conn' + str(conn))
-                del conn
+            if profitability > 0:
+                if profitability * 0.5 > self.setting.get_bid():
+                    if self.prev_profitable != 1:
+                        Logger.important('Profitable: ' + str(profitability))
+                        self.prev_profitable = 1
+                    self.destroy_backup()
+                    self.start_zerg_proxies(Server.INSTANCES)
+                else:
+                    if self.prev_profitable != -1:
+                        Logger.warning('Not profitable at the moment: ' + str(profitability))
+                        self.prev_profitable = -1
+                    self.destroy_zerg()
+                    self.start_backup_proxies(Server.INSTANCES)
+
+            #gc.collect()
+
+            #Logger.warning('Number of connections: ' + str(len(self.list_conns_zerg)))
+
+            time.sleep(0.1)
+
+    def start_zerg_proxies(self, num_conns):
+        while len(self.list_conns_zerg) < num_conns:
+            self.list_conns_zerg.append(Proxy(self.algo, self.server, self.api, backup=False).start())
+
+    def start_backup_proxies(self, num_conns):
+        while len(self.list_conns_backup) < num_conns:
+            self.list_conns_backup.append(Proxy(self.algo, self.server, self.api, backup=True).start())
+
+    def destroy_zerg(self):
+        for proxy in self.list_conns_zerg:
+            try:
+                proxy.close()#
+            except AttributeError:
+                pass
+
+        tmp = []
+
+        for proxy in self.list_conns_zerg:
+            if not proxy.exit_signal:
+                tmp.append(proxy)
             else:
-                new_list.append(conn)
+                del proxy
 
-        list_conns = new_list[:]
-        gc.collect()
+        self.list_conns_zerg = tmp
 
-        Logger.warning('Number of connections: ' + str(len(list_conns)))
+    def destroy_backup(self):
+        for proxy in self.list_conns_backup:
+            try:
+                proxy.close()
+            except AttributeError:
+                pass
 
-        time.sleep(0.1)
+        tmp = []
+
+        for proxy in self.list_conns_backup:
+            if not proxy.exit_signal:
+                tmp.append(proxy)
+            else:
+                del proxy
+
+        self.list_conns_backup = tmp
+
+
+if __name__ == '__main__':
+    algo_ = sys.argv[1]
+
+    s = Server(algo_)
+
+    s.run()

@@ -23,17 +23,29 @@ class ConfigReader:
     def get_pool_port(self):
         return self.data_settings[self.algo]['pool_port']
 
+    def get_pool_port_backup(self):
+        return self.data_settings[self.algo]['pool_port_backup']
+
     def get_server_port(self):
         return self.data_settings[self.algo]['server_port']
 
     def get_param(self, coin):
         return self.data_settings[self.algo]['coins'][coin]
 
+    def get_payout(self):
+        return self.data['payout_coin']
+
+    def get_wallet_address(self):
+        return self.data['wallet']
+
     def refresh(self):
         self.data = self._read_file()
 
     def get_bid(self):
         return self.data_settings[self.algo]["bid"]
+
+    def get_conversation(self):
+        return self.data_settings[self.algo]["hash_conversion"]
 
     def get_logging_level(self):
         level = self.data['debug_level']
