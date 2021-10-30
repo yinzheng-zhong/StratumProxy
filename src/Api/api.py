@@ -44,13 +44,14 @@ class Api:
                     for j in response.keys():
                         if i in j and response[j]['algo'] == self.algo:
                             current_estimate = float(response[j]['estimate_current'])
-                            Logger.important('Current estimate: ' + str(current_estimate))
                             if current_estimate > max_profit:
                                 max_profit = current_estimate
                                 coin_to_mine = i
 
                 self._last_coin = coin_to_mine
                 self._last_profitability = max_profit
+
+                Logger.important('Current estimate: ' + str(max_profit))
             except Exception as e:
                 print(e)
 
