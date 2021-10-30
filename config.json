@@ -19,7 +19,7 @@
       },
       "pool_port": 3433,
       "pool_port_backup": 3333,
-      "pool_backup_url:": "scrypt.eu-west.nicehash.com",
+      "pool_backup_url": "scrypt.eu-west.nicehash.com",
       "server_port": 3334,
       "bid": 0.23,
       "hash_conversion": 1
@@ -38,7 +38,7 @@
       },
       "pool_port": 9999,
       "pool_port_backup": 3353,
-      "pool_backup_url:": "",
+      "pool_backup_url": "",
       "server_port": 3335,
       "bid": 1.32,
       "hash_conversion": 1
@@ -58,6 +58,7 @@
       },
       "pool_port": 3333,
       "pool_port_backup": 3333,
+      "pool_backup_url": "",
       "server_port": 3333,
       "bid": 0.0062,
       "hash_conversion": 1000
