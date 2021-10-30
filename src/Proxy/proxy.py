@@ -169,12 +169,16 @@ class Proxy:
     """
 
     def close(self, hard=False):
+        t = threading.Thread(target=self._close_thread, args=(hard,))
+        t.start()
+
+    def _close_thread(self, hard=False):
         if not hard:
             self.miner_sending_queue.put('{"id":0,"method":"client.reconnect","params":[]}\n')
         self.exit_signal = True
 
         Logger.warning('Server restart', id_=self.id_)
-        time.sleep(2)
+        time.sleep(5)
         self.server_conn.close()
         self.server = None
         self.client.server.close()
