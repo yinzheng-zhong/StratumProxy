@@ -79,7 +79,7 @@ class Proxy:
 
         self.server_conn, addr = self.server.accept()
         self.client = Client(self.algo, self.backup)
-        Logger.warning('New conn from ' + str(addr), id_=self.id_)
+        Logger.warning('New conn from ' + str(addr) + ' ' + str(self.backup), id_=self.id_)
 
         #thread_periodic_calls = threading.Thread(target=self.periodic_calls)
 
@@ -163,7 +163,6 @@ class Proxy:
         if not hard:
             self.miner_sending_queue.put('{"id":0,"method":"client.reconnect","params":[]}\n')
 
-        time.sleep(5)
         self.exit_signal = True
         Logger.warning('Server restart', id_=self.id_)
         self.server_conn.close()
