@@ -55,6 +55,7 @@
         "FCH": "m=solo"
       },
       "pool_port": 3333,
+      "pool_port_backup": 3333,
       "server_port": 3333,
       "bid": 0.0062,
       "hash_conversion": 1000

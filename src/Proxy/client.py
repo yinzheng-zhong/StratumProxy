@@ -2,6 +2,7 @@ import socket
 import select
 import logging
 from src.Model.logger import Logger
+from src.Helper.utils import Utils
 
 from src.Helper.config_reader import ConfigReader
 import queue
@@ -17,7 +18,7 @@ class Client:
     def _connect(self):
         settings = ConfigReader(self.algo)
         if self.backup:
-            host = 'daggerhashimoto' + '.eu-west.nicehash.com'
+            host = Utils.zerg_to_nice_algo_converter(self.algo) + '.eu-west.nicehash.com'
             port = settings.get_pool_port_backup()
         else:
             host = self.algo + '.eu.mine.zergpool.com'  # The server's hostname or IP address
