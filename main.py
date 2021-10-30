@@ -19,6 +19,7 @@ class Server:
 
         self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.server.settimeout(0.1)
         self.server.bind(("0.0.0.0", self.setting.get_server_port()))
         self.server.listen(Server.INSTANCES)
 
@@ -26,18 +27,25 @@ class Server:
 
         self.list_conns_zerg = []
         self.list_conns_backup = []
+        self._last_coin = ''
 
     def run(self):
         while True:
-            _, profitability = self.api.get_most_profitable()
+            coin, profitability = self.api.get_most_profitable()
 
             if profitability > 0:
                 if profitability * 0.8 > self.setting.get_bid():
                     if self.prev_profitable != 1:
                         Logger.important('Profitable: ' + str(profitability))
                         self.prev_profitable = 1
+                    if self._last_coin != coin:
+                        self.destroy_zerg()
+                        Logger.warning('Mining: ' + coin)
+                        self._last_coin = coin
+
                     self.destroy_backup()
                     self.start_zerg_proxies(Server.INSTANCES)
+
                 else:
                     if self.prev_profitable != -1:
                         Logger.warning('Not profitable at the moment: ' + str(profitability))
@@ -45,7 +53,7 @@ class Server:
                     self.destroy_zerg()
                     self.start_backup_proxies(Server.INSTANCES)
 
-            #gc.collect()
+            gc.collect()
 
             #Logger.warning('Number of connections: ' + str(len(self.list_conns_zerg)))
 
@@ -62,7 +70,7 @@ class Server:
     def destroy_zerg(self):
         for proxy in self.list_conns_zerg:
             try:
-                proxy.close()#
+                proxy.close(hard=True)
             except AttributeError:
                 continue
 
@@ -71,13 +79,15 @@ class Server:
         for proxy in self.list_conns_zerg:
             if not proxy.exit_signal:
                 tmp.append(proxy)
+            else:
+                del proxy
 
         self.list_conns_zerg = tmp
 
     def destroy_backup(self):
         for proxy in self.list_conns_backup:
             try:
-                proxy.close()
+                proxy.close(hard=True)
             except AttributeError:
                 continue
 
@@ -86,6 +96,8 @@ class Server:
         for proxy in self.list_conns_backup:
             if not proxy.exit_signal:
                 tmp.append(proxy)
+            else:
+                del proxy
 
         self.list_conns_backup = tmp
 

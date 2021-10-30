@@ -70,7 +70,16 @@ class Proxy:
         return self
 
     def run(self):
-        self.server_conn, addr = self.server.accept()
+        addr = ''
+        while not self.server_conn:
+            if self.exit_signal:
+                return
+
+            try:
+                self.server_conn, addr = self.server.accept()
+            except Exception:
+                continue
+
         self.client = Client(self.algo, self.backup)
         Logger.warning('New conn from ' + str(addr) + ' ' + str(self.backup), id_=self.id_)
 
@@ -166,6 +175,7 @@ class Proxy:
         self.exit_signal = True
         Logger.warning('Server restart', id_=self.id_)
         self.server_conn.close()
+        self.server = None
         self.client.server.close()
         # raise Exception('Server restart')
 
