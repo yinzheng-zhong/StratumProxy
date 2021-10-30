@@ -160,8 +160,8 @@ class Proxy:
     """
 
     def close(self, hard=False):
-        #if not hard:
-        #    self.miner_sending_queue.put('{"id":0,"method":"client.reconnect","params":[]}\n')
+        if not hard:
+            self.miner_sending_queue.put('{"id":0,"method":"client.reconnect","params":[]}\n')
 
         self.exit_signal = True
         Logger.warning('Server restart', id_=self.id_)
