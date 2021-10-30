@@ -64,7 +64,7 @@ class Server:
             try:
                 proxy.close()#
             except AttributeError:
-                pass
+                continue
 
         tmp = []
 
@@ -79,7 +79,7 @@ class Server:
             try:
                 proxy.close()
             except AttributeError:
-                pass
+                continue
 
         tmp = []
 
