@@ -41,6 +41,9 @@ class ConfigReader:
     def get_wallet_address(self):
         return self.data['wallet']
 
+    def get_wallet_address_backup(self):
+        return self.data['wallet_backup']
+
     def refresh(self):
         self.data = self._read_file()
 

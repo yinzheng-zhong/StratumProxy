@@ -27,6 +27,7 @@ class Proxy:
         #self.last_coin = ''
 
         self.wallet = self.setting.get_wallet_address()
+        self.wallet_backup = self.setting.get_wallet_address_backup()
 
         self.mining_params = None
         self.create_mining_params()
@@ -59,7 +60,7 @@ class Proxy:
 
     def create_user_name(self):
         if self.backup:
-            self.user_name = self.wallet + '.prox'
+            self.user_name = self.wallet_backup + '.prox'
         else:
             self.user_name = self.wallet
 
