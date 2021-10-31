@@ -3,21 +3,21 @@
     "scrypt": {
       "coins": {
         "DGB": "",
-        "NAH": "solo",
-        "FLO": "solo",
-        "XSH": "solo",
+        "NAH": "m=solo",
+        "FLO": "m=solo",
+        "XSH": "m=solo",
         "LTC": "",
-        "PYRK": "solo",
-        "GLC": "solo",
+        "PYRK": "m=solo",
+        "GLC": "m=solo",
         "EMC2": "",
-        "GCN": "solo",
-        "NSD": "solo",
-        "CHEESE": "solo",
+        "GCN": "m=solo",
+        "NSD": "m=solo",
+        "CHEESE": "m=solo",
         "XVG": "",
-        "LCP": "solo",
+        "LCP": "m=solo",
         "IBH": "",
-        "GSR": "solo,sd=2000",
-        "ISN": "solo"
+        "GSR": "m=solo,sd=2000",
+        "ISN": "m=solo"
       },
       "pool_port": 3433,
       "pool_port_backup": 3333,
@@ -29,14 +29,14 @@
     "ethash": {
       "coins": {
         "ETH": "",
-        "NUKO": "solo",
+        "NUKO": "m=solo",
         "TSF": "",
         "CLO": "",
-        "EXP": "solo",
-        "ATH": "solo",
-        "EGEM": "solo",
-        "PRKL": "solo",
-        "NILU": "solo"
+        "EXP": "m=solo",
+        "ATH": "m=solo",
+        "EGEM": "m=solo",
+        "PRKL": "m=solo",
+        "NILU": "m=solo"
       },
       "pool_port": 9999,
       "pool_port_backup": 3353,
@@ -49,14 +49,14 @@
       "coins": {
         "BCA": "",
         "DGB": "",
-        "LCC": "solo",
+        "LCC": "m=solo",
         "XEC": "",
-        "SHND": "solo",
-        "DVT": "solo",
-        "PYRK": "solo",
-        "BVG": "solo",
-        "CHTA": "solo",
-        "FCH": "solo"
+        "SHND": "m=solo",
+        "DVT": "m=solo",
+        "PYRK": "m=solo",
+        "BVG": "m=solo",
+        "CHTA": "m=solo",
+        "FCH": "m=solo"
       },
       "pool_port": 3333,
       "pool_port_backup": 3333,
@@ -67,8 +67,8 @@
     },
     "x13": {
       "coins": {
-        "ONION": "solo",
-        "FCH": "solo"
+        "ONION": "m=solo",
+        "FCH": "m=solo"
       },
       "pool_port": 3633,
       "pool_port_backup": 3333,

@@ -48,13 +48,13 @@ class Proxy:
     def create_mining_params(self):
         payout_coin = self.setting.get_payout()
         mining_coin, _ = self.api.get_most_profitable()
-        mining_mode = self.setting.get_param(mining_coin)
+        mining_params = self.setting.get_params(mining_coin)
 
         if self.backup:
             self.mining_params = 'x'
         else:
-            if mining_mode:
-                self.mining_params = 'c=' + payout_coin + ',' + 'm=' + mining_mode + ',' + 'mc=' + mining_coin
+            if mining_params:
+                self.mining_params = 'c=' + payout_coin + ',' + mining_params + ',' + 'mc=' + mining_coin
             else:
                 self.mining_params = 'c=' + payout_coin + ',' + 'mc=' + mining_coin
 

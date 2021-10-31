@@ -32,7 +32,7 @@ class ConfigReader:
     def get_server_port(self):
         return self.data_settings[self.algo]['server_port']
 
-    def get_param(self, coin):
+    def get_params(self, coin):
         return self.data_settings[self.algo]['coins'][coin]
 
     def get_payout(self):
@@ -74,5 +74,5 @@ if __name__ == '__main__':
     conf = ConfigReader('scrypt')
 
     o = conf.get_coins()
-    oo = conf.get_param()
+    oo = conf.get_params()
     ooo = conf.get_pool_port()
