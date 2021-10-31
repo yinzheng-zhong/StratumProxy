@@ -16,7 +16,7 @@
         "XVG": "",
         "LCP": "solo",
         "IBH": "",
-        "GSR": "solo",
+        "GSR": "solo,sd=2000",
         "ISN": "solo"
       },
       "pool_port": 3433,
