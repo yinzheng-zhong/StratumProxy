@@ -240,6 +240,7 @@ class Proxy:
                 continue
 
     def process_from_pool(self):
+        consecutive_rejections = 0
         while True:
             if self.exit_signal:
                 Logger.debug('process_from_pool exit_signal', id_=self.id_)
@@ -256,6 +257,12 @@ class Proxy:
             json_obj = json.loads(pool_data)
             if 'result' in json_obj.keys() and json_obj['result'] is False:
                 Logger.warning('Pool: ' + pool_data, id_=self.id_)
+
+                # prevent rejections
+                consecutive_rejections += 1
+
+                if consecutive_rejections >= 3:
+                    self.close()
             else:
                 Logger.info('Pool: ' + repr(pool_data), id_=self.id_)
 
