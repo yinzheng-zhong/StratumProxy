@@ -3,15 +3,15 @@
     "scrypt": {
       "coins": {
         "DGB": "",
-        "NAH": "",
+        "NAH": "solo",
         "FLO": "solo",
         "XSH": "solo",
         "LTC": "",
         "PYRK": "solo",
-        "GLC": "",
+        "GLC": "solo",
         "EMC2": "",
         "GCN": "solo",
-        "NSD": "",
+        "NSD": "solo",
         "CHEESE": "solo",
         "XVG": "",
         "LCP": "solo",
