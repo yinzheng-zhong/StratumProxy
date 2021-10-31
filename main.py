@@ -10,7 +10,7 @@ import gc
 
 
 class Server:
-    INSTANCES = 20
+    INSTANCES = 100
 
     def __init__(self, algo):
         self.algo = algo
@@ -38,6 +38,7 @@ class Server:
                     if self.prev_profitable != 1:
                         Logger.important('Profitable: ' + str(profitability))
                         self.prev_profitable = 1
+                        self.setting.refresh()
                     if self._last_coin != coin:
                         self.destroy_zerg()
                         Logger.warning('Mining: ' + coin)
@@ -50,6 +51,7 @@ class Server:
                     if self.prev_profitable != -1:
                         Logger.warning('Not profitable at the moment: ' + str(profitability))
                         self.prev_profitable = -1
+                        self.setting.refresh()
                     self.destroy_zerg()
                     self.start_backup_proxies(Server.INSTANCES)
 

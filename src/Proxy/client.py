@@ -17,8 +17,9 @@ class Client:
 
     def _connect(self):
         settings = ConfigReader(self.algo)
-        if self.backup:
-            host = settings.get_pool_backup_url()
+        back_up_url = settings.get_pool_backup_url()
+        if self.backup and back_up_url:
+            host = back_up_url
             port = settings.get_pool_port_backup()
         else:
             host = self.algo + '.eu.mine.zergpool.com'  # The server's hostname or IP address

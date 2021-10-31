@@ -64,9 +64,21 @@
       "server_port": 3333,
       "bid": 0.0062,
       "hash_conversion": 1000
+    },
+    "x13": {
+      "coins": {
+        "ONION": "solo",
+        "FCH": "solo"
+      },
+      "pool_port": 3633,
+      "pool_port_backup": 3333,
+      "pool_backup_url": "",
+      "server_port": 3633,
+      "bid": 0.0001,
+      "hash_conversion": 1
     }
   },
   "debug_level": "info",
-  "payout_coin": "BTC",
-  "wallet": "3ML7Y3pHBZdDg2H9KTTc1zwRsADpUZn8tH"
+  "payout_coin": "LTC",
+  "wallet": "MKtaAY1GZqmmTtfrtWftykGyQWdQazhNS7"
 }    
