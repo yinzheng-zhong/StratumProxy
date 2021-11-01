@@ -1,4 +1,6 @@
 import sys
+
+from src.Helper.utils import Utils
 from src.Proxy.proxy import Proxy
 from src.Helper.config_reader import ConfigReader
 import time
@@ -28,6 +30,7 @@ class Server:
         self.list_conns_zerg = []
         self.list_conns_backup = []
         self._last_coin = ''
+        self._last_profitability = 0
 
     def run(self):
         while True:
@@ -39,7 +42,9 @@ class Server:
                         Logger.important('Profitable: ' + str(profitability))
                         self.prev_profitable = 1
                         self.setting.refresh()
-                    if self._last_coin != coin:
+                    # this just switch coin and the price difference should be 2% compare to the last one
+                    if self._last_coin != coin and Utils.price_difference(self._last_profitability, profitability) > 0.02:
+                        self._last_profitability = profitability
                         self.destroy_zerg()
                         Logger.warning('Mining: ' + coin)
                         self._last_coin = coin
@@ -52,6 +57,7 @@ class Server:
                         Logger.warning('Not profitable at the moment: ' + str(profitability))
                         self.prev_profitable = -1
                         self.setting.refresh()
+
                     self.destroy_zerg()
                     self.start_backup_proxies(Server.INSTANCES)
 
