@@ -265,6 +265,7 @@ class Proxy:
                     self.close()
             else:
                 Logger.info('Pool: ' + repr(pool_data), id_=self.id_)
+                consecutive_rejections = 0
 
             #if self.backup:
             #    if 'mining.notify' in pool_data:
