@@ -49,8 +49,8 @@ class Server:
                         Logger.warning('Mining: ' + coin)
                         self._last_coin = coin
 
-                    self.destroy_backup()
                     self.start_zerg_proxies(Server.INSTANCES)
+                    self.destroy_backup()
 
                 else:
                     if self.prev_profitable != -1:
@@ -58,8 +58,8 @@ class Server:
                         self.prev_profitable = -1
                         self.setting.refresh()
 
-                    self.destroy_zerg()
                     self.start_backup_proxies(Server.INSTANCES)
+                    self.destroy_zerg()
 
             gc.collect()
 
