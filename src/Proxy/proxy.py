@@ -81,11 +81,6 @@ class Proxy:
             except Exception:
                 continue
 
-        # check again even if it's connected to make sure.
-        if self.exit_signal:
-            self.close()
-            return
-
         self.client = Client(self.algo, self.backup)
         Logger.warning('New conn from ' + str(addr) + ' ' + str(self.backup), id_=self.id_)
 
