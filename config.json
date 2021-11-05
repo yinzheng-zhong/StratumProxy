@@ -16,7 +16,8 @@
         "XVG": "",
         "LCP": "m=solo",
         "IBH": "",
-        "ISN": "m=solo"
+        "ISN": "m=solo",
+        "TIPS": "m=solo"
       },
       "pool_port": 3433,
       "pool_port_backup": 3333,
