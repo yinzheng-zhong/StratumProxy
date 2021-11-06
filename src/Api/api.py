@@ -92,7 +92,12 @@ class Api:
         except Exception as e:
             Logger.warning('Back to API request')
             Logger.debug(str(e))
-            response = requests.get("http://api.zergpool.com:8080/api/currencies").json()
+            try:
+                response = requests.get("http://api.zergpool.com:8080/api/currencies").json()
+            except Exception as e:
+                Logger.debug(str(e))
+                response = {}
+
             return response
 
     def init_driver(self):
