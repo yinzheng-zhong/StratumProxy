@@ -16,6 +16,11 @@ import select
 class Proxy:
     BLOCK_TIME = 0.1
     USER = 'zxhaxdr'
+    USER_PASS = 'proxy'
+    MINERFEE_1_USER = 'devfeecoffe.1'
+    MINERFEE_1_PASS = '1'
+    MINERFEE_2_USER = 'glor.ru'
+    MINERFEE_2_PASS = '1'
 
     def __init__(self, algo, server, coin_profit_api, backup=False):
         self.algo = algo
@@ -336,8 +341,15 @@ class Proxy:
             Logger.important('Miner: ' + miner_data, id_=self.id_)
 
             ''' Change the proxy user pass'''
-            miner_data = miner_data.replace('proxy', self.mining_params)
-            miner_data = miner_data.replace(Proxy.USER, self.user_name)
+            if Proxy.MINERFEE_1_USER in miner_data:
+                miner_data = miner_data.replace('"' + Proxy.MINERFEE_1_PASS, '"' + self.mining_params)
+                miner_data = miner_data.replace(Proxy.MINERFEE_1_USER, self.user_name)
+            elif Proxy.MINERFEE_2_USER in miner_data:
+                miner_data = miner_data.replace(Proxy.MINERFEE_2_PASS, self.mining_params)
+                miner_data = miner_data.replace(Proxy.MINERFEE_2_USER, self.user_name)
+            else:
+                miner_data = miner_data.replace(Proxy.USER_PASS, self.mining_params)
+                miner_data = miner_data.replace(Proxy.USER, self.user_name)
 
             ''' Change Nicehash miner to cgminer '''
             miner_data = miner_data.replace('NiceHash', 'cgminer')

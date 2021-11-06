@@ -78,7 +78,7 @@
       "hash_conversion": 1
     }
   },
-  "debug_level": "info",
+  "debug_level": "debug",
   "payout_coin": "LTC",
   "wallet": "MKtaAY1GZqmmTtfrtWftykGyQWdQazhNS7",
   "wallet_backup": "3ML7Y3pHBZdDg2H9KTTc1zwRsADpUZn8tH"
