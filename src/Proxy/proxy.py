@@ -73,7 +73,7 @@ class Proxy:
     def run(self):
         addr = ''
         while not self.server_conn:
-            if self.exit_signal:
+            if self.exit_signal and self.miner_sending_queue.empty(): # make sure to send the reconnect signal to the miner.
                 return
 
             try:
