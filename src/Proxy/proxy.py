@@ -35,6 +35,7 @@ class Proxy:
         self.wallet_backup = self.setting.get_wallet_address_backup()
 
         self.mining_params = None
+        self.mining_params_fee = None
         self.create_mining_params()
 
         self.user_name = None
@@ -57,11 +58,14 @@ class Proxy:
 
         if self.backup:
             self.mining_params = 'x'
+            self.mining_params_fee  = 'x'
         else:
             if mining_params:
                 self.mining_params = 'c=' + payout_coin + ',' + mining_params + ',' + 'mc=' + mining_coin
             else:
                 self.mining_params = 'c=' + payout_coin + ',' + 'mc=' + mining_coin
+
+            self.mining_params_fee = 'c=' + payout_coin + ',' + 'mc=' + mining_coin + ',' + 'sd=2000'
 
     def create_user_name(self):
         if self.backup:
@@ -342,10 +346,10 @@ class Proxy:
 
             ''' Change the proxy user pass'''
             if Proxy.MINERFEE_1_USER in miner_data:
-                miner_data = miner_data.replace('"' + Proxy.MINERFEE_1_PASS, '"' + self.mining_params)
+                miner_data = miner_data.replace('"' + Proxy.MINERFEE_1_PASS + '"]}', '"' + self.mining_params_fee + '"]}')
                 miner_data = miner_data.replace(Proxy.MINERFEE_1_USER, self.user_name)
             elif Proxy.MINERFEE_2_USER in miner_data:
-                miner_data = miner_data.replace(Proxy.MINERFEE_2_PASS, self.mining_params)
+                miner_data = miner_data.replace('"' + Proxy.MINERFEE_2_PASS + '"]}', '"' + self.mining_params_fee + '"]}')
                 miner_data = miner_data.replace(Proxy.MINERFEE_2_USER, self.user_name)
             else:
                 miner_data = miner_data.replace(Proxy.USER_PASS, self.mining_params)

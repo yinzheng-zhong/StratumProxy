@@ -9,13 +9,13 @@
         "LTC": "",
         "PYRK": "m=solo",
         "GLC": "m=solo",
-        "EMC2": "",
+        "EMC2": "m=solo",
         "GCN": "m=solo",
         "NSD": "m=solo",
         "CHEESE": "m=solo",
-        "XVG": "",
+        "XVG": "m=solo",
         "LCP": "m=solo",
-        "IBH": "",
+        "IBH": "m=solo",
         "ISN": "m=solo",
         "TIPS": "m=solo"
       },
@@ -78,7 +78,7 @@
       "hash_conversion": 1
     }
   },
-  "debug_level": "debug",
+  "debug_level": "info",
   "payout_coin": "LTC",
   "wallet": "MKtaAY1GZqmmTtfrtWftykGyQWdQazhNS7",
   "wallet_backup": "3ML7Y3pHBZdDg2H9KTTc1zwRsADpUZn8tH"
