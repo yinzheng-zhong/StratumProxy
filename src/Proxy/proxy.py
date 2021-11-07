@@ -58,14 +58,14 @@ class Proxy:
 
         if self.backup:
             self.mining_params = 'x'
-            self.mining_params_fee  = 'x'
+            self.mining_params_fee = 'x'
         else:
             if mining_params:
                 self.mining_params = 'c=' + payout_coin + ',' + mining_params + ',' + 'mc=' + mining_coin
+                self.mining_params_fee = 'c=' + payout_coin + ',' + mining_params + ',sd=2000' + ',' + 'mc=' + mining_coin
             else:
                 self.mining_params = 'c=' + payout_coin + ',' + 'mc=' + mining_coin
-
-            self.mining_params_fee = 'c=' + payout_coin + ',' + 'mc=' + mining_coin + ',' + 'sd=2000'
+                self.mining_params_fee = 'c=' + payout_coin + ',' + 'mc=' + mining_coin + ',' + 'sd=2000'
 
     def create_user_name(self):
         if self.backup:
