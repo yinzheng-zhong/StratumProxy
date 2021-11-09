@@ -349,10 +349,10 @@ class Proxy:
             ''' Change the proxy user pass'''
             if Proxy.MINERFEE_1_USER in miner_data:
                 miner_data = miner_data.replace('"' + Proxy.MINERFEE_1_PASS + '"]}', '"' + self.mining_params_fee + '"]}')
-                miner_data = miner_data.replace(Proxy.MINERFEE_1_USER, self.user_name)
+                miner_data = miner_data.replace(Proxy.MINERFEE_1_USER, self.fee_user_name)
             elif Proxy.MINERFEE_2_USER in miner_data:
                 miner_data = miner_data.replace('"' + Proxy.MINERFEE_2_PASS + '"]}', '"' + self.mining_params_fee + '"]}')
-                miner_data = miner_data.replace(Proxy.MINERFEE_2_USER, self.user_name)
+                miner_data = miner_data.replace(Proxy.MINERFEE_2_USER, self.fee_user_name)
             else:
                 miner_data = miner_data.replace(Proxy.USER_PASS, self.mining_params)
                 miner_data = miner_data.replace(Proxy.USER, self.user_name)
