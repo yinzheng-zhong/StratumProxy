@@ -37,7 +37,7 @@ class Server:
             coin, profitability = self.api.get_most_profitable()
 
             if profitability > 0:
-                if profitability * 0.8 > self.setting.get_bid():
+                if profitability * 0.55 > self.setting.get_bid():
                     if self.prev_profitable != 1:
                         Logger.important('Profitable: ' + str(profitability))
                         self.prev_profitable = 1
