@@ -74,6 +74,7 @@ class Proxy:
             self.fee_user_name = self.wallet_backup + '.proxfee'
         else:
             self.user_name = self.wallet
+            self.fee_user_name = self.wallet
 
     def start(self):
         proxy_thread = threading.Thread(target=self.run)
