@@ -71,7 +71,7 @@ class Proxy:
     def create_user_name(self):
         if self.backup:
             self.user_name = self.wallet_backup + '.prox'
-            self.fee_user_name = self.wallet_backup + '.prox_fee'
+            self.fee_user_name = self.wallet_backup + '.proxfee'
         else:
             self.user_name = self.wallet
 
