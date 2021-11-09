@@ -39,6 +39,7 @@ class Proxy:
         self.create_mining_params()
 
         self.user_name = None
+        self.fee_user_name = None
         self.create_user_name()
 
         self.miner_receive_queue = queue.Queue()
@@ -65,11 +66,12 @@ class Proxy:
                 self.mining_params_fee = 'c=' + payout_coin + ',' + mining_params + ',sd=2000' + ',' + 'mc=' + mining_coin
             else:
                 self.mining_params = 'c=' + payout_coin + ',' + 'mc=' + mining_coin
-                self.mining_params_fee = 'c=' + payout_coin + ',' + 'mc=' + mining_coin + ',' + 'sd=2000'
+                self.mining_params_fee = 'c=' + payout_coin + ',' + 'mc=' + mining_coin + ',' + 'sd=2000,ID=fee'
 
     def create_user_name(self):
         if self.backup:
             self.user_name = self.wallet_backup + '.prox'
+            self.fee_user_name = self.wallet_backup + '.prox_fee'
         else:
             self.user_name = self.wallet
 
