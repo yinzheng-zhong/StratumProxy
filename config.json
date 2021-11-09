@@ -23,7 +23,7 @@
       "pool_port_backup": 8888,
       "pool_backup_url": "ltc.sr.f2pool.com",
       "server_port": 3334,
-      "bid": 0.034,
+      "bid": 0.25,
       "hash_conversion": 1
     },
     "ethash": {
