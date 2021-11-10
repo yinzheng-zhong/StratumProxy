@@ -21,7 +21,7 @@
       },
       "pool_port": 3433,
       "pool_port_backup": 3333,
-      "pool_backup_url": "149.210.234.234",
+      "pool_backup_url": "88.80.187.187",
       "server_port": 3334,
       "bid": 0.25,
       "hash_conversion": 1
