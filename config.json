@@ -20,7 +20,7 @@
         "TIPS": "m=solo"
       },
       "pool_port": 3433,
-      "pool_port_backup": 8888,
+      "pool_port_backup": 3333,
       "pool_backup_url": "149.210.234.234",
       "server_port": 3334,
       "bid": 0.25,
