@@ -21,7 +21,7 @@
       },
       "pool_port": 3433,
       "pool_port_backup": 8888,
-      "pool_backup_url": "ltc.sr.f2pool.com",
+      "pool_backup_url": "144.76.222.140",
       "server_port": 3334,
       "bid": 0.25,
       "hash_conversion": 1
