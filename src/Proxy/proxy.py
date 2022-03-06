@@ -15,8 +15,8 @@ import select
 
 class Proxy:
     BLOCK_TIME = 0.1
-    USER = 'username_setting_in_miner'
-    USER_PASS = 'pass_setting_in_miner'
+    USER = 'proxyuser' # set this user in miner
+    USER_PASS = 'proxypass'
     MINERFEE_1_USER = 'devfee.1' # redirect the dev fee to the proxy by setting DNS on the router.
     MINERFEE_1_PASS = '1'
     MINERFEE_2_USER = 'devfee.2'
