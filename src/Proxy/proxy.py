@@ -15,11 +15,11 @@ import select
 
 class Proxy:
     BLOCK_TIME = 0.1
-    USER = 'zxhaxdr'
-    USER_PASS = 'proxy'
-    MINERFEE_1_USER = 'devfeecoffe.1'
+    USER = 'username_setting_in_miner'
+    USER_PASS = 'pass_setting_in_miner'
+    MINERFEE_1_USER = 'devfee.1' # redirect the dev fee to the proxy by setting DNS on the router.
     MINERFEE_1_PASS = '1'
-    MINERFEE_2_USER = 'glor.ru'
+    MINERFEE_2_USER = 'devfee.2'
     MINERFEE_2_PASS = '1'
 
     def __init__(self, algo, server, coin_profit_api, backup=False):
